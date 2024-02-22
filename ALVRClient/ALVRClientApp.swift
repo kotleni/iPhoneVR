@@ -152,9 +152,10 @@ struct MetalView: UIViewRepresentable {
         private func sendFovConfigs() {
             if alvrInitialized {
                 print("Send view config")
-                let v: Float = 0.8
+                let v: Float = 1.0
+                let v2: Float = 1.0
                 let leftAngles = atan(simd_float4(v, v, v, v))
-                let rightAngles = atan(simd_float4(v, v, v, v))
+                let rightAngles = atan(simd_float4(v2, v2, v2, v2))
                 let leftFov = AlvrFov(left: -leftAngles.x, right: leftAngles.y, up: leftAngles.z, down: -leftAngles.w)
                 let rightFov = AlvrFov(left: -rightAngles.x, right: rightAngles.y, up: rightAngles.z, down: -rightAngles.w)
                 let fovs = [leftFov, rightFov]
