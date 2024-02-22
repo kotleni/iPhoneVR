@@ -222,6 +222,22 @@ struct MetalView: UIViewRepresentable {
             return try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
         }
         
+        func parseMessage(_ message: String) {
+            let lines = message.components(separatedBy: "\n")
+            for line in lines {
+                let keyValuePair = line.split(separator: ":")
+                if keyValuePair.count == 2 {
+                    let key = keyValuePair[0].trimmingCharacters(in: .whitespaces)
+                    let value = keyValuePair[1].trimmingCharacters(in: .whitespaces)
+//                        if key == "hostname" {
+//                            updateHostname(value)
+//                        } else if key == "IP" {
+//                            updateIP(value)
+//                        }
+                }
+            }
+        }
+        
         func draw(in view: MTKView) {
             guard let drawable = view.currentDrawable else {
                 return
@@ -292,10 +308,14 @@ struct MetalView: UIViewRepresentable {
                 // print(alvrEvent.tag)
                 switch UInt32(alvrEvent.tag) {
                 case ALVR_EVENT_HUD_MESSAGE_UPDATED.rawValue:
-                        print("hud message updated")
+                    print("hud message updated")
                     let hudMessageBuffer = UnsafeMutableBufferPointer<CChar>.allocate(capacity: 1024)
                     alvr_hud_message(hudMessageBuffer.baseAddress)
-                    //print(String(cString: hudMessageBuffer.baseAddress!, encoding: .utf8))
+                    
+                    let message = String(cString: hudMessageBuffer.baseAddress!, encoding: .utf8)!
+                    parseMessage(message)
+                    print(message)
+                    
                     hudMessageBuffer.deallocate()
                 case ALVR_EVENT_STREAMING_STARTED.rawValue:
                     print("streaming started: \(alvrEvent.STREAMING_STARTED)")
