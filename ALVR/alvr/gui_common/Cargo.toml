@@ -1,0 +1,12 @@
+[package]
+name = "alvr_gui_common"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+alvr_common.workspace = true
+
+egui = "0.25"

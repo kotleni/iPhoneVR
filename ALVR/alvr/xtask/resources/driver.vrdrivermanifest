@@ -1,0 +1,10 @@
+{
+	"alwaysActivate": true,
+	"name" : "alvr_server",
+	"redirectsDisplay": true,
+
+	"hmd_presence" :
+	[
+		"*.*"
+	]
+}
