@@ -32,11 +32,6 @@ final class WorldTracker {
         self.worldTrackingSource = worldTrackingSource
     }
     
-    /// Get device linear velocity
-    func getLinearVelocity() -> (Float, Float, Float) {
-        return worldTrackingSource.getLinearVelocity()
-    }
-    
     /// Get device position
     func getPosition() -> (Float, Float, Float) {
         return worldTrackingSource.getPosition()

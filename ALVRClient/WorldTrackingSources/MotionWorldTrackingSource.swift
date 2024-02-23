@@ -13,7 +13,6 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
     private let operationQueue: OperationQueue
     private let motionManager: CMMotionManager
     
-    private var linearVelocity: (Float, Float, Float) = (0.0, 0.0, 0.0)
     private var position: (Float, Float, Float) = (0.0, 0.0, 0.0)
     private var rotation: (Float, Float, Float) = (0.0, 0.0, 0.0)
     
@@ -42,7 +41,6 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
             }
             
             // FIXME: Not working
-            // self.linearVelocity = (Float(motion.gravity.y), Float(motion.userAcceleration.z), Float(motion.userAcceleration.z))
             self.position = (0, 1.1, 0)
             //self.rotation = (Float(motion.rotationRate.x), Float(motion.rotationRate.y), Float(motion.rotationRate.z))
             
@@ -54,10 +52,6 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
     
     func stop() {
         motionManager.stopDeviceMotionUpdates()
-    }
-    
-    func getLinearVelocity() -> (Float, Float, Float) {
-        return linearVelocity
     }
     
     func getPosition() -> (Float, Float, Float) {

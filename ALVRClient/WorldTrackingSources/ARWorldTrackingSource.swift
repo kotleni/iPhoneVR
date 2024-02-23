@@ -19,7 +19,6 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     private var tps = 0
     
     // FIXME: Monkey code
-    private var linearVelocity: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
     private var position: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
     private var rotation: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
     
@@ -37,8 +36,6 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // TODO: linearVelocity
-        
         if let framePosition = arSession.currentFrame?.camera.transform.columns.3 {
             // FIXME: Need to calibrate y offset
             // One metter offset just matched for initial position on my desk
@@ -67,10 +64,6 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     
     func stop() {
         arSession.pause()
-    }
-    
-    func getLinearVelocity() -> (Float, Float, Float) {
-        return linearVelocity
     }
     
     func getPosition() -> (Float, Float, Float) {

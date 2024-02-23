@@ -8,7 +8,6 @@
 import Foundation
 
 protocol WorldTrackingSource {
-    func getLinearVelocity() -> (Float, Float, Float)
     func getPosition() -> (Float, Float, Float)
     func getRotation() -> (Float, Float, Float)
     

@@ -160,7 +160,7 @@ struct MetalView: UIViewRepresentable {
                     // YOLO?
                     // Send new tracking
                     let pose = AlvrPose(orientation: worldTracker.getQuaterionRotation(), position: worldTracker.getPosition())
-                    var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, pose: pose, linear_velocity: worldTracker.getLinearVelocity(), angular_velocity: (0, 0, 0))
+                    var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, pose: pose, linear_velocity: (0, 0, 0), angular_velocity: (0, 0, 0))
                     let timestamp = mach_absolute_time()
                     //print("sending tracking for timestamp \(timestamp)")
                     alvr_send_tracking(timestamp, &trackingMotion, 1, nil, nil)
