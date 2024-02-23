@@ -125,8 +125,8 @@ struct MetalView: UIViewRepresentable {
                     renderer.updateStreamingState(isStarted: false)
                 case ALVR_EVENT_HAPTICS.rawValue:
                     print("haptics: \(alvrEvent.HAPTICS)")
-                case ALVR_EVENT_CREATE_DECODER.rawValue:
-                    print("create decoder: \(alvrEvent.CREATE_DECODER)")
+                case ALVR_EVENT_DECODER_CONFIG.rawValue:
+                    print("create decoder: \(alvrEvent.DECODER_CONFIG)")
                     renderer.createDecoder()
                 case ALVR_EVENT_FRAME_READY.rawValue:
                     // print("frame ready")
@@ -134,10 +134,11 @@ struct MetalView: UIViewRepresentable {
                     
                     // YOLO?
                     // Send new tracking
-                    var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, orientation: worldTracker.getQuaterionRotation(), position: worldTracker.getPosition(), linear_velocity: worldTracker.getLinearVelocity(), angular_velocity: (0, 0, 0))
+                    let pose = AlvrPose(orientation: worldTracker.getQuaterionRotation(), position: worldTracker.getPosition())
+                    var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, pose: pose, linear_velocity: worldTracker.getLinearVelocity(), angular_velocity: (0, 0, 0))
                     let timestamp = mach_absolute_time()
                     //print("sending tracking for timestamp \(timestamp)")
-                    alvr_send_tracking(timestamp, &trackingMotion, 1)
+                    alvr_send_tracking(timestamp, &trackingMotion, 1, nil, nil)
                     
                     // Send battery state every 30 secs
                     if Int64.getCurrentMillis() - lastBatteryStateUpdateTime > 1000 * 30 {

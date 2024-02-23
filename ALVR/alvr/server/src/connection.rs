@@ -1,5 +1,6 @@
 use crate::{
     bitrate::BitrateManager,
+    body_tracking::BodyTrackingSink,
     face_tracking::FaceTrackingSink,
     hand_gestures::{trigger_hand_gesture_actions, HandGestureManager, HAND_GESTURE_BUTTON_SET},
     haptics,
@@ -18,17 +19,20 @@ use alvr_common::{
     once_cell::sync::Lazy,
     parking_lot::{Condvar, Mutex},
     settings_schema::Switch,
-    warn, AnyhowToCon, ConResult, ConnectionError, ConnectionState, LifecycleState, OptLazy, ToCon,
-    BUTTON_INFO, CONTROLLER_PROFILE_INFO, DEVICE_ID_TO_PATH, HEAD_ID, LEFT_HAND_ID,
-    QUEST_CONTROLLER_PROFILE_PATH, RIGHT_HAND_ID,
+    warn, AnyhowToCon, ConResult, ConnectionError, ConnectionState, LifecycleState, OptLazy,
+    BUTTON_INFO, CONTROLLER_PROFILE_INFO, DEVICE_ID_TO_PATH, HAND_LEFT_ID, HAND_RIGHT_ID, HEAD_ID,
+    QUEST_CONTROLLER_PROFILE_PATH,
 };
 use alvr_events::{ButtonEvent, EventType, HapticsEvent, TrackingEvent};
 use alvr_packets::{
     ClientConnectionResult, ClientControlPacket, ClientListAction, ClientStatistics, Haptics,
-    ServerControlPacket, StreamConfigPacket, Tracking, VideoPacketHeader, AUDIO, HAPTICS,
+    NegotiatedStreamingConfig, ServerControlPacket, Tracking, VideoPacketHeader, AUDIO, HAPTICS,
     STATISTICS, TRACKING, VIDEO,
 };
-use alvr_session::{ControllersEmulationMode, FrameSize, OpenvrConfig, SessionConfig};
+use alvr_session::{
+    BodyTrackingConfig, BodyTrackingSinkConfig, ControllersEmulationMode, FrameSize, OpenvrConfig,
+    SessionConfig,
+};
 use alvr_sockets::{
     PeerType, ProtoControlSocket, StreamSender, StreamSocketBuilder, KEEPALIVE_INTERVAL,
     KEEPALIVE_TIMEOUT,
@@ -97,6 +101,25 @@ pub fn contruct_openvr_config(session: &SessionConfig) -> OpenvrConfig {
         false
     };
 
+    let body_tracking_vive_enabled =
+        if let Switch::Enabled(config) = &settings.headset.body_tracking {
+            matches!(config.sink, BodyTrackingSinkConfig::FakeViveTracker)
+        } else {
+            false
+        };
+
+    // Should be true if using full body tracking
+    let body_tracking_has_legs = if let Switch::Enabled(config) = &settings.headset.body_tracking {
+        if let Switch::Enabled(body_source_settings) = &config.sources.body_tracking_full_body_meta
+        {
+            body_source_settings.enable_full_body
+        } else {
+            false
+        }
+    } else {
+        false
+    };
+
     let mut foveation_center_size_x = 0.0;
     let mut foveation_center_size_y = 0.0;
     let mut foveation_center_shift_x = 0.0;
@@ -147,7 +170,9 @@ pub fn contruct_openvr_config(session: &SessionConfig) -> OpenvrConfig {
         filler_data: settings.video.encoder_config.filler_data,
         entropy_coding: settings.video.encoder_config.entropy_coding as u32,
         use_10bit_encoder: settings.video.encoder_config.use_10bit,
+        enable_pre_analysis: amf_controls.enable_pre_analysis,
         enable_vbaq: amf_controls.enable_vbaq,
+        enable_hmqb: amf_controls.enable_hmqb,
         use_preproc: amf_controls.use_preproc,
         preproc_sigma: amf_controls.preproc_sigma,
         preproc_tor: amf_controls.preproc_tor,
@@ -161,6 +186,8 @@ pub fn contruct_openvr_config(session: &SessionConfig) -> OpenvrConfig {
         sw_thread_count: settings.video.encoder_config.software.thread_count,
         controllers_enabled,
         controller_is_tracker,
+        body_tracking_vive_enabled,
+        body_tracking_has_legs,
         enable_foveated_encoding,
         foveation_center_size_x,
         foveation_center_size_y,
@@ -382,10 +409,10 @@ fn connection_pipeline(
             ClientListAction::SetDisplayName(display_name),
         );
 
-        if client_protocol_id != alvr_common::protocol_id() {
+        if client_protocol_id != alvr_common::protocol_id_u64() {
             warn!(
                 "Trusted client is incompatible! Expected protocol ID: {}, found: {}",
-                alvr_common::protocol_id(),
+                alvr_common::protocol_id_u64(),
                 client_protocol_id,
             );
 
@@ -399,7 +426,7 @@ fn connection_pipeline(
     };
 
     let streaming_caps = if let Some(streaming_caps) = maybe_streaming_caps {
-        streaming_caps
+        alvr_packets::decode_video_streaming_capabilities(&streaming_caps).to_con()?
     } else {
         con_bail!("Only streaming clients are supported for now");
     };
@@ -437,10 +464,10 @@ fn connection_pipeline(
     let fps = {
         let mut best_match = 0_f32;
         let mut min_diff = f32::MAX;
-        for rr in &streaming_caps.supported_refresh_rates {
-            let diff = (*rr - settings.video.preferred_fps).abs();
+        for rate in &streaming_caps.supported_refresh_rates {
+            let diff = (*rate - settings.video.preferred_fps).abs();
             if diff < min_diff {
-                best_match = *rr;
+                best_match = *rate;
                 min_diff = diff;
             }
         }
@@ -453,6 +480,19 @@ fn connection_pipeline(
     {
         warn!("Chosen refresh rate not supported. Using {fps}Hz");
     }
+
+    let enable_foveated_encoding = if let Switch::Enabled(config) = settings.video.foveated_encoding
+    {
+        let enable = streaming_caps.supports_foveated_encoding || config.force_enable;
+
+        if !enable {
+            warn!("Foveated encoding is not supported by the client.");
+        }
+
+        enable
+    } else {
+        false
+    };
 
     let game_audio_sample_rate =
         if let Switch::Enabled(game_audio_config) = &settings.audio.game_audio {
@@ -481,19 +521,17 @@ fn connection_pipeline(
             0
         };
 
-    let client_config = StreamConfigPacket {
-        session: {
-            let session = server_data_lock.session().clone();
-            serde_json::to_string(&session).to_con()?
+    let stream_config_packet = alvr_packets::encode_stream_config(
+        server_data_lock.session(),
+        &NegotiatedStreamingConfig {
+            view_resolution: stream_view_resolution,
+            refresh_rate_hint: fps,
+            game_audio_sample_rate,
+            enable_foveated_encoding,
         },
-        negotiated: serde_json::json!({
-            "view_resolution": stream_view_resolution,
-            "refresh_rate_hint": fps,
-            "game_audio_sample_rate": game_audio_sample_rate,
-        })
-        .to_string(),
-    };
-    proto_socket.send(&client_config).to_con()?;
+    )
+    .to_con()?;
+    proto_socket.send(&stream_config_packet).to_con()?;
 
     let (mut control_sender, mut control_receiver) =
         proto_socket.split(STREAMING_RECV_TIMEOUT).to_con()?;
@@ -504,6 +542,7 @@ fn connection_pipeline(
     new_openvr_config.target_eye_resolution_width = target_view_resolution.x;
     new_openvr_config.target_eye_resolution_height = target_view_resolution.y;
     new_openvr_config.refresh_rate = fps as _;
+    new_openvr_config.enable_foveated_encoding = enable_foveated_encoding;
 
     if server_data_lock.session().openvr_config != new_openvr_config {
         server_data_lock.session_mut().openvr_config = new_openvr_config;
@@ -705,6 +744,15 @@ fn connection_pipeline(
                         FaceTrackingSink::new(config.sink, settings.connection.osc_local_port).ok()
                     });
 
+            let mut body_tracking_sink =
+                settings
+                    .headset
+                    .body_tracking
+                    .into_option()
+                    .and_then(|config| {
+                        BodyTrackingSink::new(config.sink, settings.connection.osc_local_port).ok()
+                    });
+
             while is_streaming(&client_hostname) {
                 let data = match tracking_receiver.recv(STREAMING_RECV_TIMEOUT) {
                     Ok(tracking) => tracking,
@@ -748,10 +796,10 @@ fn connection_pipeline(
                     );
 
                     left_hand_skeleton = tracking.hand_skeletons[0].map(|s| {
-                        tracking::to_openvr_hand_skeleton(headset_config, *LEFT_HAND_ID, s)
+                        tracking::to_openvr_hand_skeleton(headset_config, *HAND_LEFT_ID, s)
                     });
                     right_hand_skeleton = tracking.hand_skeletons[1].map(|s| {
-                        tracking::to_openvr_hand_skeleton(headset_config, *RIGHT_HAND_ID, s)
+                        tracking::to_openvr_hand_skeleton(headset_config, *HAND_RIGHT_ID, s)
                     });
                 }
 
@@ -767,20 +815,12 @@ fn connection_pipeline(
                     let data_manager_lock = SERVER_DATA_MANAGER.read();
                     if data_manager_lock.settings().logging.log_tracking {
                         alvr_events::send_event(EventType::Tracking(Box::new(TrackingEvent {
-                            head_motion: motions
+                            device_motions: motions
                                 .iter()
-                                .find(|(id, _)| *id == *HEAD_ID)
-                                .map(|(_, m)| *m),
-                            controller_motions: [
-                                motions
-                                    .iter()
-                                    .find(|(id, _)| *id == *LEFT_HAND_ID)
-                                    .map(|(_, m)| *m),
-                                motions
-                                    .iter()
-                                    .find(|(id, _)| *id == *RIGHT_HAND_ID)
-                                    .map(|(_, m)| *m),
-                            ],
+                                .filter_map(|(id, motion)| {
+                                    Some(((*DEVICE_ID_TO_PATH.get(id)?).into(), *motion))
+                                })
+                                .collect(),
                             hand_skeletons: [left_hand_skeleton, right_hand_skeleton],
                             eye_gazes: local_eye_gazes,
                             fb_face_expression: tracking.face_data.fb_face_expression.clone(),
@@ -797,10 +837,34 @@ fn connection_pipeline(
                     sink.send_tracking(face_data);
                 }
 
+                let track_body = {
+                    let data_manager_lock = SERVER_DATA_MANAGER.read();
+                    matches!(
+                        data_manager_lock.settings().headset.body_tracking,
+                        Switch::Enabled(BodyTrackingConfig { tracked: true, .. })
+                    )
+                };
+
+                if track_body {
+                    if let Some(sink) = &mut body_tracking_sink {
+                        let tracking_manager_lock = tracking_manager.lock();
+                        sink.send_tracking(&tracking.device_motions, &tracking_manager_lock);
+                    }
+                }
+
                 let ffi_motions = motions
                     .into_iter()
                     .map(|(id, motion)| tracking::to_ffi_motion(id, motion))
                     .collect::<Vec<_>>();
+
+                let ffi_body_trackers: Option<Vec<crate::FfiBodyTracker>> = {
+                    let tracking_manager_lock = tracking_manager.lock();
+                    tracking::to_ffi_body_trackers(
+                        &tracking.device_motions,
+                        &tracking_manager_lock,
+                        track_body,
+                    )
+                };
 
                 let enable_skeleton = controllers_config
                     .as_ref()
@@ -827,11 +891,11 @@ fn connection_pipeline(
                     if let Some(hand_skeleton) = tracking.hand_skeletons[0] {
                         trigger_hand_gesture_actions(
                             gestures_button_mapping_manager,
-                            *LEFT_HAND_ID,
+                            *HAND_LEFT_ID,
                             &hand_gesture_manager_lock.get_active_gestures(
                                 hand_skeleton,
                                 gestures_config,
-                                *LEFT_HAND_ID,
+                                *HAND_LEFT_ID,
                             ),
                             gestures_config.only_touch,
                         );
@@ -839,11 +903,11 @@ fn connection_pipeline(
                     if let Some(hand_skeleton) = tracking.hand_skeletons[1] {
                         trigger_hand_gesture_actions(
                             gestures_button_mapping_manager,
-                            *RIGHT_HAND_ID,
+                            *HAND_RIGHT_ID,
                             &hand_gesture_manager_lock.get_active_gestures(
                                 hand_skeleton,
                                 gestures_config,
-                                *RIGHT_HAND_ID,
+                                *HAND_RIGHT_ID,
                             ),
                             gestures_config.only_touch,
                         );
@@ -870,6 +934,16 @@ fn connection_pipeline(
                                 ptr::null()
                             },
                             track_controllers.into(),
+                            if let Some(body_trackers) = &ffi_body_trackers {
+                                body_trackers.as_ptr()
+                            } else {
+                                ptr::null()
+                            },
+                            if let Some(body_trackers) = &ffi_body_trackers {
+                                body_trackers.len() as _
+                            } else {
+                                0
+                            },
                         )
                     };
                 }
@@ -990,7 +1064,7 @@ fn connection_pipeline(
                         if let Some(config) = DECODER_CONFIG.lock().clone() {
                             control_sender
                                 .lock()
-                                .send(&ServerControlPacket::InitializeDecoder(config))
+                                .send(&ServerControlPacket::DecoderConfig(config))
                                 .ok();
                         }
                         unsafe { crate::RequestIDR() }

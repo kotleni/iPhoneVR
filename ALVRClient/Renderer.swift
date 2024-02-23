@@ -65,7 +65,13 @@ final class Renderer {
         let width = UInt32(size.width)
         let oneViewWidth = (width / 2)
         let height = UInt32(size.height)
-        alvr_initialize(nil, nil, oneViewWidth, height, refreshRates, Int32(refreshRates.count), true)
+        alvr_initialize(
+            nil, nil,
+            oneViewWidth, height,
+            refreshRates, Int32(refreshRates.count),
+            /* external decoding */ true,
+            /* support foveated encoding */ false
+        )
         alvr_resume()
         alvr_request_idr()
         
