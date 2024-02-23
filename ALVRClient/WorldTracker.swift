@@ -7,80 +7,49 @@
 
 import ARKit
 
-final class WorldTracker: NSObject, ARSessionDelegate {
-    private let dispatchQueue: DispatchQueue
-    private let configuration: ARWorldTrackingConfiguration // or AROrientationTrackingConfiguration
-    private let arSession: ARSession
-    // ARSession have very big impact for battery
-    // Maybe i should use CoreMotion?
-    // But ARSession can track position in space
-    
-    private var lastTickTime: Int64 = 0
-    private var tps = 0
-    
-    // FIXME: Monkey code
-    private var linearVelocity: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
-    private var position: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
-    private var rotation: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
-    
-    override init() {
-        dispatchQueue = .init(label: "WorldTrackerQueue", qos: .background)
-        
-        configuration = .init()
-        configuration.planeDetection = .horizontal
-        
-        arSession = ARSession()
-        
-        super.init()
-        
-        // Start ar session
-        dispatchQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.arSession.run(self.configuration)
-        }
-        
-        arSession.delegate = self
+final class WorldTracker {
+    enum WorldTrackingMode {
+        case arSession
+        case coreMotion // Not working yet
     }
     
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // TODO: linearVelocity
+    private let worldTrackingSource: WorldTrackingSource
+    
+    init(trackingMode: WorldTrackingMode) {
+        print("World tracking mode: \(trackingMode)")
         
-        if let framePosition = arSession.currentFrame?.camera.transform.columns.3 {
-            // FIXME: Need to calibrate y offset
-            // One metter offset just matched for initial position on my desk
-            position = (framePosition.x, framePosition.y + 1.0 /* 1 metter offset */, framePosition.z)
+        let worldTrackingSource: WorldTrackingSource
+        if trackingMode == .arSession {
+            worldTrackingSource = ARWorldTrackingSource()
+        } else if trackingMode == .coreMotion {
+            worldTrackingSource = MotionWorldTrackingSource()
+        } else {
+            fatalError("Do you miss processing new tracking mode?")
         }
         
-        if let frameEuler = arSession.currentFrame?.camera.eulerAngles {
-            rotation = (frameEuler.x, frameEuler.y, frameEuler.z)
-        }
+        worldTrackingSource.start()
         
-        tps += 1
-        if Int64.getCurrentMillis() - lastTickTime > 1000 {
-            lastTickTime = Int64.getCurrentMillis()
-            // print("World tracker tps is \(tps)")
-            tps = 0
-        }
+        self.worldTrackingSource = worldTrackingSource
     }
     
     /// Get device linear velocity
     func getLinearVelocity() -> (Float, Float, Float) {
-        return linearVelocity
+        return worldTrackingSource.getLinearVelocity()
     }
     
     /// Get device position
     func getPosition() -> (Float, Float, Float) {
-        return position
+        return worldTrackingSource.getPosition()
     }
     
     /// Get device euler rotation
     func getRotation() -> (Float, Float, Float) {
-        return rotation
+        return worldTrackingSource.getRotation()
     }
     
     /// Get device quaterion rotation
     func getQuaterionRotation() -> AlvrQuat {
-        let r = rotation
+        let r = getRotation()
         
         // Get quaternion components
         let cr = cos(r.0 * 0.5)

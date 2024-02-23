@@ -43,7 +43,7 @@ struct MetalView: UIViewRepresentable {
         private var lastBatteryStateUpdateTime: Int64 = 0
         
         init(_ parent: MetalView) {
-            self.worldTracker = WorldTracker()
+            self.worldTracker = WorldTracker(trackingMode: .arSession)
             self.parent = parent
             
             guard let metalDevice = MTLCreateSystemDefaultDevice() else { fatalError("Can't create metal device.") }

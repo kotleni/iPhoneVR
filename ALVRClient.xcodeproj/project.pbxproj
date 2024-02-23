@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */; };
 		5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8A2B88A12100CA1254 /* Renderer.swift */; };
+		5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */; };
+		5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */; };
+		5A945A922B88BF1E00CA1254 /* MotionWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */; };
 		5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913C2B87B709002FB88C /* WorldTracker.swift */; };
 		5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913E2B87BFF0002FB88C /* Main.swift */; };
 		5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD9D1932B889DC500FA24CE /* Int64.swift */; };
@@ -38,6 +41,9 @@
 /* Begin PBXFileReference section */
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A945A8A2B88A12100CA1254 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTrackingSource.swift; sourceTree = "<group>"; };
+		5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWorldTrackingSource.swift; sourceTree = "<group>"; };
+		5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionWorldTrackingSource.swift; sourceTree = "<group>"; };
 		5AB8A52F2B861F9600C343FE /* ALVRClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ALVRClient.entitlements; sourceTree = "<group>"; };
 		5AD6913C2B87B709002FB88C /* WorldTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTracker.swift; sourceTree = "<group>"; };
 		5AD6913E2B87BFF0002FB88C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
@@ -68,6 +74,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */ = {
+			isa = PBXGroup;
+			children = (
+				5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */,
+				5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */,
+			);
+			path = WorldTrackingSources;
+			sourceTree = "<group>";
+		};
 		5AD9D1922B889D3900FA24CE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,9 +113,11 @@
 		C5E5902C2B6379ED00328ED6 /* ALVRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */,
 				5AD9D1922B889D3900FA24CE /* Extensions */,
 				C5E590312B6379ED00328ED6 /* ALVRClientApp.swift */,
 				5A945A8A2B88A12100CA1254 /* Renderer.swift */,
+				5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */,
 				5AD6913C2B87B709002FB88C /* WorldTracker.swift */,
 				D61E6FDF2B71CE080076031A /* VideoHandler.swift */,
 				5AD6913E2B87BFF0002FB88C /* Main.swift */,
@@ -206,11 +223,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A945A922B88BF1E00CA1254 /* MotionWorldTrackingSource.swift in Sources */,
+				5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */,
 				C5E590382B6379ED00328ED6 /* Shaders.metal in Sources */,
 				5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */,
 				5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */,
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
+				5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */,
 				D61E6FE02B71CE080076031A /* VideoHandler.swift in Sources */,
 				C5E590322B6379ED00328ED6 /* ALVRClientApp.swift in Sources */,
 			);
