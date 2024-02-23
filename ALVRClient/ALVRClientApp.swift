@@ -40,6 +40,7 @@ struct MetalView: UIViewRepresentable {
         private let renderer: Renderer
         
         private var alvrInitialized = false
+        private var lastBatteryStateUpdateTime: Int64 = 0
         
         init(_ parent: MetalView) {
             self.worldTracker = WorldTracker()
@@ -118,10 +119,6 @@ struct MetalView: UIViewRepresentable {
                     alvr_request_idr()
                     alvrInitialized = true
                     sendFovConfigs()
-                    
-                    // TODO: Do it every 30 secs
-                    UIDevice.current.isBatteryMonitoringEnabled = true
-                    alvr_send_battery(Coordinator.deviceIdHead, UIDevice.current.batteryLevel, UIDevice.current.batteryState == .charging)
                 case ALVR_EVENT_STREAMING_STOPPED.rawValue:
                     print("streaming stopped")
                     alvrInitialized = false
@@ -141,6 +138,14 @@ struct MetalView: UIViewRepresentable {
                     let timestamp = mach_absolute_time()
                     //print("sending tracking for timestamp \(timestamp)")
                     alvr_send_tracking(timestamp, &trackingMotion, 1)
+                    
+                    // Send battery state every 30 secs
+                    if Int64.getCurrentMillis() - lastBatteryStateUpdateTime > 1000 * 30 {
+                        lastBatteryStateUpdateTime = Int64.getCurrentMillis()
+                        UIDevice.current.isBatteryMonitoringEnabled = true
+                        print("Update battery state: \(UIDevice.current.batteryLevel) / 1.0 | Is charging: \(UIDevice.current.batteryState == .charging)")
+                        alvr_send_battery(Coordinator.deviceIdHead, UIDevice.current.batteryLevel, UIDevice.current.batteryState == .charging)
+                    }
                 default:
                     print("what")
                 }
