@@ -104,14 +104,20 @@ struct MetalView: UIViewRepresentable {
         }
         
         func draw(in view: MTKView) {
-            guard let drawable = view.currentDrawable else {
+            guard let drawable = view.currentDrawable,
+                  let renderPassDescriptor = view.currentRenderPassDescriptor else {
                 return
             }
             
             if self.alvrInitialized {
-                renderer.draw(drawable: drawable, renderPassDescriptor: view.currentRenderPassDescriptor!)
+                renderer.draw(drawable: drawable, renderPassDescriptor: renderPassDescriptor)
             }
             
+            pollEvents()
+        }
+        
+        /// Poll all alvr events
+        func pollEvents() {
             let res = alvr_poll_event(&alvrEvent)
             if res {
                 // print(alvrEvent.tag)
