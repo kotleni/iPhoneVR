@@ -119,8 +119,6 @@ struct MetalView: UIViewRepresentable {
                     alvr_request_idr()
                     alvrInitialized = true
                     sendFovConfigs()
-                    
-                    renderer.createDecoder()
                 case ALVR_EVENT_STREAMING_STOPPED.rawValue:
                     print("streaming stopped")
                     alvrInitialized = false
@@ -129,7 +127,7 @@ struct MetalView: UIViewRepresentable {
                     print("haptics: \(alvrEvent.HAPTICS)")
                 case ALVR_EVENT_DECODER_CONFIG.rawValue:
                     print("create decoder: \(alvrEvent.DECODER_CONFIG)")
-                    //renderer.createDecoder()
+                    renderer.createDecoder()
                 case ALVR_EVENT_FRAME_READY.rawValue:
                     // print("frame ready")
                     renderer.updateFrame()
