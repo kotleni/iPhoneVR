@@ -319,18 +319,7 @@ struct MetalView: UIViewRepresentable {
                     hudMessageBuffer.deallocate()
                 case ALVR_EVENT_STREAMING_STARTED.rawValue:
                     print("streaming started: \(alvrEvent.STREAMING_STARTED)")
-                    
-                    // TODO: Foveation is nedded (? or not)
-                   // let foveationVars = FFR.calculateFoveationVars(alvrEvent.STREAMING_STARTED)
-//                    videoFramePipelineState = try! MainRenderer.buildRenderPipelineForVideoFrameWithDevice(
-//                        device: view.device!,
-//                        mtlVertexDescriptor: mtlVertexDescriptor,
-//                        foveationVars: foveationVars
-//                    )
                     videoFramePipelineState = try! Coordinator.buildRenderPipelineWithDevice(device: view.device!)
-                    
-//                    var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, orientation: AlvrQuat(x: 1, y: 0, z: 0, w: 0), position: (0, 0, 0), linear_velocity: (0, 0, 0), angular_velocity: (0, 0, 0))
-//                    alvr_send_tracking(mach_absolute_time(), &trackingMotion, 1)
                     
                     alvr_request_idr()
                     framesSinceLastIDR = 0

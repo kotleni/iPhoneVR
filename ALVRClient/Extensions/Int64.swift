@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+extension Int64 {
+    static func getCurrentMillis() -> Int64 {
+        return Int64(NSDate().timeIntervalSince1970 * 1000)
+    }
+}
