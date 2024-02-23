@@ -60,25 +60,6 @@ final class Renderer {
         }
     }
     
-    func start(size: CGSize) {
-        // TODO: Maybe i should move it to app class?
-        let refreshRates: [Float] = [60]
-        let width = UInt32(size.width)
-        let oneViewWidth = (width / 2)
-        let height = UInt32(size.height)
-        alvr_initialize(
-            nil, nil,
-            oneViewWidth, height,
-            refreshRates, Int32(refreshRates.count),
-            /* support foveated encoding */ false,
-            /* external decoding */ true
-        )
-        alvr_resume()
-        alvr_request_idr()
-        
-        print("alvr resume!")
-    }
-    
     func draw(drawable: CAMetalDrawable, renderPassDescriptor: MTLRenderPassDescriptor) {
         let commandBuffer = metalCommandQueue.makeCommandBuffer()!
         
