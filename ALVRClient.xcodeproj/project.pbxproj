@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */; };
+		5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8A2B88A12100CA1254 /* Renderer.swift */; };
 		5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913C2B87B709002FB88C /* WorldTracker.swift */; };
 		5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913E2B87BFF0002FB88C /* Main.swift */; };
 		5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD9D1932B889DC500FA24CE /* Int64.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5A945A8A2B88A12100CA1254 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		5AB8A52F2B861F9600C343FE /* ALVRClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ALVRClient.entitlements; sourceTree = "<group>"; };
 		5AD6913C2B87B709002FB88C /* WorldTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTracker.swift; sourceTree = "<group>"; };
 		5AD6913E2B87BFF0002FB88C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			children = (
 				5AD9D1922B889D3900FA24CE /* Extensions */,
 				C5E590312B6379ED00328ED6 /* ALVRClientApp.swift */,
+				5A945A8A2B88A12100CA1254 /* Renderer.swift */,
 				5AD6913C2B87B709002FB88C /* WorldTracker.swift */,
 				D61E6FDF2B71CE080076031A /* VideoHandler.swift */,
 				5AD6913E2B87BFF0002FB88C /* Main.swift */,
@@ -205,6 +208,7 @@
 			files = (
 				C5E590382B6379ED00328ED6 /* Shaders.metal in Sources */,
 				5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */,
+				5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */,
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
 				D61E6FE02B71CE080076031A /* VideoHandler.swift in Sources */,
