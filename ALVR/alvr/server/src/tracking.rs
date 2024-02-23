@@ -1,7 +1,10 @@
-use crate::{to_ffi_quat, FfiDeviceMotion, FfiHandSkeleton};
+use crate::{to_ffi_quat, FfiBodyTracker, FfiDeviceMotion, FfiHandSkeleton};
 use alvr_common::{
     glam::{EulerRot, Quat, Vec3},
-    DeviceMotion, Pose, HEAD_ID, LEFT_HAND_ID, RIGHT_HAND_ID,
+    once_cell::sync::Lazy,
+    DeviceMotion, Pose, BODY_CHEST_ID, BODY_HIPS_ID, BODY_LEFT_ELBOW_ID, BODY_LEFT_FOOT_ID,
+    BODY_LEFT_KNEE_ID, BODY_RIGHT_ELBOW_ID, BODY_RIGHT_FOOT_ID, BODY_RIGHT_KNEE_ID, HAND_LEFT_ID,
+    HAND_RIGHT_ID, HEAD_ID,
 };
 use alvr_session::{
     settings_schema::Switch, HeadsetConfig, PositionRecenteringMode, RotationRecenteringMode,
@@ -12,6 +15,21 @@ use std::{
 };
 
 const DEG_TO_RAD: f32 = PI / 180.0;
+
+static BODY_TRACKER_ID_MAP: Lazy<HashMap<u64, u32>> = Lazy::new(|| {
+    HashMap::from([
+        // Upper body
+        (*BODY_CHEST_ID, 0),
+        (*BODY_HIPS_ID, 1),
+        (*BODY_LEFT_ELBOW_ID, 2),
+        (*BODY_RIGHT_ELBOW_ID, 3),
+        // Legs
+        (*BODY_LEFT_KNEE_ID, 4),
+        (*BODY_LEFT_FOOT_ID, 5),
+        (*BODY_RIGHT_KNEE_ID, 6),
+        (*BODY_RIGHT_FOOT_ID, 7),
+    ])
+});
 
 fn get_hand_skeleton_offsets(config: &HeadsetConfig) -> (Pose, Pose) {
     let left_offset;
@@ -126,7 +144,7 @@ impl TrackingManager {
             let r = controllers.left_controller_rotation_offset;
 
             device_motion_configs.insert(
-                *LEFT_HAND_ID,
+                *HAND_LEFT_ID,
                 MotionConfig {
                     pose_offset: Pose {
                         orientation: Quat::from_euler(
@@ -143,7 +161,7 @@ impl TrackingManager {
             );
 
             device_motion_configs.insert(
-                *RIGHT_HAND_ID,
+                *HAND_RIGHT_ID,
                 MotionConfig {
                     pose_offset: Pose {
                         orientation: Quat::from_euler(
@@ -178,9 +196,9 @@ impl TrackingManager {
                 motion.angular_velocity = inverse_origin_orientation * motion.angular_velocity;
 
                 // Apply custom transform
-                let pose_offset = if device_id == *LEFT_HAND_ID && hand_skeletons_enabled[0] {
+                let pose_offset = if device_id == *HAND_LEFT_ID && hand_skeletons_enabled[0] {
                     left_hand_skeleton_offset
-                } else if device_id == *RIGHT_HAND_ID && hand_skeletons_enabled[1] {
+                } else if device_id == *HAND_RIGHT_ID && hand_skeletons_enabled[1] {
                     right_hand_skeleton_offset
                 } else {
                     config.pose_offset
@@ -202,8 +220,8 @@ impl TrackingManager {
                     }
                 }
 
-                if (device_id == *LEFT_HAND_ID && hand_skeletons_enabled[0])
-                    || (device_id == *RIGHT_HAND_ID && hand_skeletons_enabled[1])
+                if (device_id == *HAND_LEFT_ID && hand_skeletons_enabled[0])
+                    || (device_id == *HAND_RIGHT_ID && hand_skeletons_enabled[1])
                 {
                     // On hand tracking, velocities seem to make hands overly jittery
                     motion.linear_velocity = Vec3::ZERO;
@@ -237,7 +255,7 @@ pub fn to_openvr_hand_skeleton(
         let p = parent.orientation.conjugate() * (current.position - parent.position);
 
         // Convert to SteamVR frame of reference
-        let (orientation, position) = if id == *LEFT_HAND_ID {
+        let (orientation, position) = if id == *HAND_LEFT_ID {
             (
                 Quat::from_xyzw(-o.z, -o.y, -o.x, o.w),
                 Vec3::new(-p.z, -p.y, -p.x),
@@ -271,13 +289,13 @@ pub fn to_openvr_hand_skeleton(
         Pose::default(),
         // Wrist
         {
-            let pose_offset = if device_id == *LEFT_HAND_ID {
+            let pose_offset = if device_id == *HAND_LEFT_ID {
                 left_hand_skeleton_offset
             } else {
                 right_hand_skeleton_offset
             };
 
-            let sign = if id == *LEFT_HAND_ID { -1.0 } else { 1.0 };
+            let sign = if id == *HAND_LEFT_ID { -1.0 } else { 1.0 };
             let orientation = pose_offset.orientation.conjugate()
                 * gj[0].orientation.conjugate()
                 * gj[1].orientation
@@ -350,6 +368,28 @@ pub fn to_ffi_skeleton(skeleton: [Pose; 26]) -> FfiHandSkeleton {
             .try_into()
             .unwrap(),
     }
+}
+
+pub fn to_ffi_body_trackers(
+    device_motions: &[(u64, DeviceMotion)],
+    tracking_manager: &TrackingManager,
+    tracking: bool,
+) -> Option<Vec<FfiBodyTracker>> {
+    let mut trackers = Vec::<FfiBodyTracker>::new();
+
+    for (id, motion) in device_motions.iter() {
+        if BODY_TRACKER_ID_MAP.contains_key(id) {
+            let pose = tracking_manager.recenter_pose(motion.pose);
+            trackers.push(FfiBodyTracker {
+                trackerID: *BODY_TRACKER_ID_MAP.get(id).unwrap(),
+                orientation: to_ffi_quat(pose.orientation),
+                position: pose.position.to_array(),
+                tracking: tracking.into(),
+            });
+        }
+    }
+
+    Some(trackers)
 }
 
 // Head and eyesmust be in the same (nt recentered) convention

@@ -144,8 +144,23 @@ Temporal: Helps improve overall encoding quality, very small trade-off in speed.
 pub struct AmfConfig {
     #[schema(flag = "steamvr-restart")]
     pub quality_preset: EncoderQualityPresetAmd,
-    #[schema(strings(display_name = "Enable VBAQ"), flag = "steamvr-restart")]
+    #[schema(
+        strings(
+            display_name = "Enable VBAQ/CAQ",
+            help = "Enables Variance Based Adaptive Quantization on h264 and HEVC, and Content Adaptive Quantization on AV1"
+        ),
+        flag = "steamvr-restart"
+    )]
     pub enable_vbaq: bool,
+    #[schema(
+        strings(
+            display_name = "Enable High-Motion Quality Boost",
+            help = r#"Enables high motion quality boost mode.
+Allows the encoder to perform pre-analysis the motion of the video and use the information for better encoding"#
+        ),
+        flag = "steamvr-restart"
+    )]
+    pub enable_hmqb: bool,
     #[schema(flag = "steamvr-restart")]
     pub use_preproc: bool,
     #[schema(gui(slider(min = 0, max = 10)))]
@@ -154,6 +169,15 @@ pub struct AmfConfig {
     #[schema(gui(slider(min = 0, max = 10)))]
     #[schema(flag = "steamvr-restart")]
     pub preproc_tor: u32,
+    #[schema(
+        strings(
+            display_name = "Enable Pre-analysis",
+            help = r#"Enables pre-analysis during encoding. This will likely result in reduced performance, but may increase quality.
+Does not work with the "Reduce color banding" option, requires enabling "Use preproc""#
+        ),
+        flag = "steamvr-restart"
+    )]
+    pub enable_pre_analysis: bool,
 }
 
 #[derive(SettingsSchema, Serialize, Deserialize, Clone)]
@@ -361,6 +385,9 @@ pub struct ClientsideFoveationConfig {
 #[derive(SettingsSchema, Serialize, Deserialize, Clone, PartialEq)]
 #[schema(collapsible)]
 pub struct FoveatedEncodingConfig {
+    #[schema(strings(help = "Force enable on smartphone clients"))]
+    pub force_enable: bool,
+
     #[schema(strings(display_name = "Center region width"))]
     #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
     #[schema(flag = "steamvr-restart")]
@@ -425,7 +452,7 @@ pub enum CodecType {
     H264 = 0,
     #[schema(strings(display_name = "HEVC"))]
     Hevc = 1,
-    #[schema(strings(display_name = "AV1 (VAAPI only)"))]
+    #[schema(strings(display_name = "AV1 (AMD only)"))]
     AV1 = 2,
 }
 
@@ -620,6 +647,36 @@ pub enum FaceTrackingSinkConfig {
 pub struct FaceTrackingConfig {
     pub sources: FaceTrackingSourcesConfig,
     pub sink: FaceTrackingSinkConfig,
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone, PartialEq)]
+pub struct BodyTrackingSourcesConfig {
+    pub body_tracking_full_body_meta: Switch<BodyTrackingFullBodyMETAConfig>,
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone, PartialEq)]
+#[schema(collapsible)]
+pub struct BodyTrackingFullBodyMETAConfig {
+    #[schema(strings(help = "Enable full body tracking"))]
+    pub enable_full_body: bool,
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone)]
+pub enum BodyTrackingSinkConfig {
+    #[schema(strings(display_name = "Fake Vive Trackers"))]
+    FakeViveTracker,
+    #[schema(strings(display_name = "VRChat Body OSC"))]
+    VrchatBodyOsc { port: u16 },
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone)]
+#[schema(collapsible)]
+pub struct BodyTrackingConfig {
+    pub sources: BodyTrackingSourcesConfig,
+    pub sink: BodyTrackingSinkConfig,
+    #[schema(strings(help = "Turn this off to temporarily pause tracking."))]
+    #[schema(flag = "real-time")]
+    pub tracked: bool,
 }
 
 #[derive(SettingsSchema, Serialize, Deserialize, Clone, PartialEq, Eq)]
@@ -884,6 +941,9 @@ pub struct HeadsetConfig {
     pub enable_vive_tracker_proxy: bool,
 
     pub face_tracking: Switch<FaceTrackingConfig>,
+
+    #[schema(flag = "steamvr-restart")]
+    pub body_tracking: Switch<BodyTrackingConfig>,
 
     #[schema(flag = "steamvr-restart")]
     pub controllers: Switch<ControllersConfig>,
@@ -1258,7 +1318,9 @@ pub fn session_settings_default() -> SettingsDefault {
                     quality_preset: EncoderQualityPresetAmdDefault {
                         variant: EncoderQualityPresetAmdDefaultVariant::Speed,
                     },
+                    enable_pre_analysis: false,
                     enable_vbaq: false,
+                    enable_hmqb: false,
                     use_preproc: false,
                     preproc_sigma: 4,
                     preproc_tor: 7,
@@ -1299,6 +1361,7 @@ pub fn session_settings_default() -> SettingsDefault {
                 enabled: true,
                 content: FoveatedEncodingConfigDefault {
                     gui_collapsed: true,
+                    force_enable: false,
                     center_size_x: 0.45,
                     center_size_y: 0.4,
                     center_shift_x: 0.4,
@@ -1406,6 +1469,26 @@ pub fn session_settings_default() -> SettingsDefault {
                         VrchatEyeOsc: FaceTrackingSinkConfigVrchatEyeOscDefault { port: 9000 },
                         variant: FaceTrackingSinkConfigDefaultVariant::VrchatEyeOsc,
                     },
+                },
+            },
+            body_tracking: SwitchDefault {
+                enabled: false,
+                content: BodyTrackingConfigDefault {
+                    gui_collapsed: true,
+                    sources: BodyTrackingSourcesConfigDefault {
+                        body_tracking_full_body_meta: SwitchDefault {
+                            enabled: true,
+                            content: BodyTrackingFullBodyMETAConfigDefault {
+                                gui_collapsed: true,
+                                enable_full_body: true,
+                            },
+                        },
+                    },
+                    sink: BodyTrackingSinkConfigDefault {
+                        VrchatBodyOsc: BodyTrackingSinkConfigVrchatBodyOscDefault { port: 9000 },
+                        variant: BodyTrackingSinkConfigDefaultVariant::FakeViveTracker,
+                    },
+                    tracked: true,
                 },
             },
             controllers: SwitchDefault {

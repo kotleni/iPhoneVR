@@ -31,7 +31,10 @@ use alvr_common::{
     parking_lot::{Mutex, RwLock},
     ConnectionState, Fov, LifecycleState, OptLazy,
 };
-use alvr_packets::{BatteryPacket, ButtonEntry, ClientControlPacket, Tracking, ViewsConfig};
+use alvr_packets::{
+    BatteryPacket, ButtonEntry, ClientControlPacket, NegotiatedStreamingConfig, Tracking,
+    ViewsConfig,
+};
 use alvr_session::{CodecType, Settings};
 use connection::{
     CONNECTION_STATE, CONTROL_SENDER, DISCONNECTED_NOTIF, STATISTICS_SENDER, TRACKING_SENDER,
@@ -59,9 +62,8 @@ static CONNECTION_THREAD: OptLazy<JoinHandle<()>> = alvr_common::lazy_mut_none()
 pub enum ClientCoreEvent {
     UpdateHudMessage(String),
     StreamingStarted {
-        view_resolution: UVec2,
-        refresh_rate_hint: f32,
         settings: Box<Settings>,
+        negotiated_config: NegotiatedStreamingConfig,
     },
     StreamingStopped,
     Haptics {
@@ -70,7 +72,8 @@ pub enum ClientCoreEvent {
         frequency: f32,
         amplitude: f32,
     },
-    MaybeCreateDecoder {
+    // Note: All subsequent DecoderConfig events should be ignored until reconnection
+    DecoderConfig {
         codec: CodecType,
         config_nal: Vec<u8>,
     },
@@ -80,8 +83,8 @@ pub enum ClientCoreEvent {
     },
 }
 
-pub fn device_model() -> String {
-    platform::device_model()
+pub fn model_name() -> String {
+    platform::model_name()
 }
 
 pub fn manufacturer_name() -> String {
@@ -89,8 +92,9 @@ pub fn manufacturer_name() -> String {
 }
 
 pub fn initialize(
-    recommended_view_resolution: UVec2,
+    default_view_resolution: UVec2,
     supported_refresh_rates: Vec<f32>,
+    supports_foveated_encoding: bool,
     external_decoder: bool,
 ) {
     logging_backend::init_logging();
@@ -104,13 +108,17 @@ pub fn initialize(
     #[cfg(target_os = "android")]
     platform::try_get_permission(platform::MICROPHONE_PERMISSION);
     #[cfg(target_os = "android")]
-    platform::acquire_wifi_lock();
+    platform::set_wifi_lock(true);
 
     EXTERNAL_DECODER.set(external_decoder);
     *LIFECYCLE_STATE.write() = LifecycleState::Idle;
 
     *CONNECTION_THREAD.lock() = Some(thread::spawn(move || {
-        connection::connection_lifecycle_loop(recommended_view_resolution, supported_refresh_rates)
+        connection::connection_lifecycle_loop(
+            default_view_resolution,
+            supported_refresh_rates,
+            supports_foveated_encoding,
+        )
     }));
 }
 
@@ -122,7 +130,7 @@ pub fn destroy() {
     }
 
     #[cfg(target_os = "android")]
-    platform::release_wifi_lock();
+    platform::set_wifi_lock(false);
 }
 
 pub fn resume() {

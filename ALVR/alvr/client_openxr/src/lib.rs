@@ -6,12 +6,12 @@ use alvr_common::{
     glam::{Quat, UVec2, Vec2, Vec3},
     info,
     parking_lot::RwLock,
-    warn, DeviceMotion, Fov, Pose, RelaxedAtomic, HEAD_ID, LEFT_HAND_ID, RIGHT_HAND_ID,
+    warn, DeviceMotion, Fov, Pose, RelaxedAtomic, HAND_LEFT_ID, HAND_RIGHT_ID, HEAD_ID,
 };
 use alvr_packets::{FaceData, Tracking};
 use alvr_session::{
-    ClientsideFoveationConfig, ClientsideFoveationMode, FaceTrackingSourcesConfig,
-    FoveatedEncodingConfig,
+    BodyTrackingSourcesConfig, ClientsideFoveationConfig, ClientsideFoveationMode,
+    FaceTrackingSourcesConfig, FoveatedEncodingConfig,
 };
 use interaction::InteractionContext;
 use khronos_egl::{self as egl, EGL1_4};
@@ -64,6 +64,7 @@ struct StreamConfig {
     foveated_encoding_config: Option<FoveatedEncodingConfig>,
     clientside_foveation_config: Option<ClientsideFoveationConfig>,
     face_sources_config: Option<FaceTrackingSourcesConfig>,
+    body_sources_config: Option<BodyTrackingSourcesConfig>,
 }
 
 struct StreamContext {
@@ -379,10 +380,10 @@ fn stream_input_pipeline(
     );
 
     if let Some(motion) = left_hand_motion {
-        device_motions.push((*LEFT_HAND_ID, motion));
+        device_motions.push((*HAND_LEFT_ID, motion));
     }
     if let Some(motion) = right_hand_motion {
-        device_motions.push((*RIGHT_HAND_ID, motion));
+        device_motions.push((*HAND_RIGHT_ID, motion));
     }
 
     let face_data = FaceData {
@@ -399,6 +400,17 @@ fn stream_input_pipeline(
         htc_eye_expression: interaction::get_htc_eye_expression(&interaction_ctx.face_sources),
         htc_lip_expression: interaction::get_htc_lip_expression(&interaction_ctx.face_sources),
     };
+
+    if let Some(body_tracker_full_body_meta) =
+        &interaction_ctx.body_sources.body_tracker_full_body_meta
+    {
+        device_motions.append(&mut interaction::get_meta_body_tracking_full_body_points(
+            &stream_ctx.reference_space.read(),
+            to_xr_time(now),
+            body_tracker_full_body_meta,
+            interaction_ctx.body_sources.enable_full_body,
+        ));
+    }
 
     alvr_client_core::send_tracking(Tracking {
         target_timestamp,
@@ -443,6 +455,13 @@ fn initialize_stream(
         if config.face_tracking_fb && matches!(platform, Platform::Quest) {
             alvr_client_core::try_get_permission("android.permission.RECORD_AUDIO");
             alvr_client_core::try_get_permission("com.oculus.permission.FACE_TRACKING")
+        }
+    }
+
+    #[cfg(target_os = "android")]
+    if let Some(config) = &config.body_sources_config {
+        if (config.body_tracking_full_body_meta.enabled()) && matches!(platform, Platform::Quest) {
+            alvr_client_core::try_get_permission("com.oculus.permission.BODY_TRACKING")
         }
     }
 
@@ -521,11 +540,11 @@ fn initialize_stream(
     );
 
     alvr_client_core::send_active_interaction_profile(
-        *LEFT_HAND_ID,
+        *HAND_LEFT_ID,
         interaction_ctx.hands_interaction[0].controllers_profile_id,
     );
     alvr_client_core::send_active_interaction_profile(
-        *RIGHT_HAND_ID,
+        *HAND_RIGHT_ID,
         interaction_ctx.hands_interaction[1].controllers_profile_id,
     );
 
@@ -568,11 +587,11 @@ pub fn entry_point() {
     alvr_client_core::init_logging();
 
     let manufacturer_name = alvr_client_core::manufacturer_name();
-    let device_model = alvr_client_core::device_model();
+    let model_name = alvr_client_core::model_name();
 
-    info!("Manufacturer: {manufacturer_name}, device model: {device_model}");
+    info!("Manufacturer: {manufacturer_name}, model: {model_name}");
 
-    let platform = match (manufacturer_name.as_str(), device_model.as_str()) {
+    let platform = match (manufacturer_name.as_str(), model_name.as_str()) {
         ("Oculus", _) => Platform::Quest,
         ("Pico", "Pico Neo 3") => Platform::PicoNeo3,
         ("Pico", _) => Platform::Pico4,
@@ -609,6 +628,8 @@ pub fn entry_point() {
     exts.fb_display_refresh_rate = available_extensions.fb_display_refresh_rate;
     exts.fb_eye_tracking_social = available_extensions.fb_eye_tracking_social;
     exts.fb_face_tracking2 = available_extensions.fb_face_tracking2;
+    exts.fb_body_tracking = available_extensions.fb_body_tracking;
+    exts.meta_body_tracking_full_body = available_extensions.meta_body_tracking_full_body;
     exts.fb_foveation = available_extensions.fb_foveation;
     exts.fb_foveation_configuration = available_extensions.fb_foveation_configuration;
     exts.fb_swapchain_update_state = available_extensions.fb_swapchain_update_state;
@@ -667,7 +688,7 @@ pub fn entry_point() {
             .unwrap();
         assert_eq!(views_config.len(), 2);
 
-        let recommended_view_resolution = UVec2::new(
+        let default_view_resolution = UVec2::new(
             views_config[0].recommended_image_rect_width,
             views_config[0].recommended_image_rect_height,
         );
@@ -682,8 +703,9 @@ pub fn entry_point() {
         static INIT_ONCE: Once = Once::new();
         INIT_ONCE.call_once(|| {
             alvr_client_core::initialize(
-                recommended_view_resolution,
+                default_view_resolution,
                 supported_refresh_rates,
+                platform != Platform::Other, // exclude smartphones
                 false,
             );
         });
@@ -697,6 +719,9 @@ pub fn entry_point() {
             stream_config
                 .as_ref()
                 .and_then(|c| c.face_sources_config.clone()),
+            stream_config
+                .as_ref()
+                .and_then(|c| c.body_sources_config.clone()),
         ));
 
         let mut session_running_context = None;
@@ -716,12 +741,12 @@ pub fn entry_point() {
                                 .unwrap();
 
                             let lobby_swapchains = [
-                                create_swapchain(&xr_session, recommended_view_resolution, None),
-                                create_swapchain(&xr_session, recommended_view_resolution, None),
+                                create_swapchain(&xr_session, default_view_resolution, None),
+                                create_swapchain(&xr_session, default_view_resolution, None),
                             ];
 
                             alvr_client_core::opengl::resume(
-                                recommended_view_resolution,
+                                default_view_resolution,
                                 [
                                     lobby_swapchains[0]
                                         .enumerate_images()
@@ -827,18 +852,16 @@ pub fn entry_point() {
                         alvr_client_core::opengl::update_hud_message(&message);
                     }
                     ClientCoreEvent::StreamingStarted {
-                        view_resolution,
-                        refresh_rate_hint,
                         settings,
+                        negotiated_config,
                     } => {
                         let new_config = Some(StreamConfig {
-                            view_resolution,
-                            refresh_rate_hint,
-                            foveated_encoding_config: settings
-                                .video
-                                .foveated_encoding
-                                .as_option()
-                                .cloned(),
+                            view_resolution: negotiated_config.view_resolution,
+                            refresh_rate_hint: negotiated_config.refresh_rate_hint,
+                            foveated_encoding_config: negotiated_config
+                                .enable_foveated_encoding
+                                .then(|| settings.video.foveated_encoding.as_option().cloned())
+                                .flatten(),
                             clientside_foveation_config: settings
                                 .video
                                 .clientside_foveation
@@ -847,6 +870,11 @@ pub fn entry_point() {
                             face_sources_config: settings
                                 .headset
                                 .face_tracking
+                                .as_option()
+                                .map(|c| c.sources.clone()),
+                            body_sources_config: settings
+                                .headset
+                                .body_tracking
                                 .as_option()
                                 .map(|c| c.sources.clone()),
                         });
@@ -875,7 +903,7 @@ pub fn entry_point() {
                         frequency,
                         amplitude,
                     } => {
-                        let action = if device_id == *LEFT_HAND_ID {
+                        let action = if device_id == *HAND_LEFT_ID {
                             &interaction_context.hands_interaction[0].vibration_action
                         } else {
                             &interaction_context.hands_interaction[1].vibration_action
@@ -1031,7 +1059,7 @@ pub fn entry_point() {
                 session_context.lobby_swapchains[1].release_image().unwrap();
 
                 display_time = vsync_time;
-                view_resolution = recommended_view_resolution;
+                view_resolution = default_view_resolution;
                 swapchains = &session_context.lobby_swapchains;
             }
 
