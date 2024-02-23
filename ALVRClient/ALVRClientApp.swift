@@ -113,7 +113,12 @@ struct MetalView: UIViewRepresentable {
                 renderer.draw(drawable: drawable, renderPassDescriptor: renderPassDescriptor)
             }
             
-            pollEvents()
+            // Exec in separated thread
+            let thread = Thread { [weak self] in
+                self?.pollEvents()
+            }
+            thread.name = "Poll Events Thread"
+            thread.start()
         }
         
         /// Poll all alvr events
