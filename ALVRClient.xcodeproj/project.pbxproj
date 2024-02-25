@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A2987952B8BF63B00220A7D /* CMQuaternion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2987942B8BF63B00220A7D /* CMQuaternion.swift */; };
+		5A2987972B8BFF1A00220A7D /* EasyARWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2987962B8BFF1A00220A7D /* EasyARWorldTrackingSource.swift */; };
 		5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */; };
 		5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8A2B88A12100CA1254 /* Renderer.swift */; };
 		5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5A2987942B8BF63B00220A7D /* CMQuaternion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMQuaternion.swift; sourceTree = "<group>"; };
+		5A2987962B8BFF1A00220A7D /* EasyARWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyARWorldTrackingSource.swift; sourceTree = "<group>"; };
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A945A8A2B88A12100CA1254 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTrackingSource.swift; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 			children = (
 				5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */,
 				5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */,
+				5A2987962B8BFF1A00220A7D /* EasyARWorldTrackingSource.swift */,
 			);
 			path = WorldTrackingSources;
 			sourceTree = "<group>";
@@ -87,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				5AD9D1932B889DC500FA24CE /* Int64.swift */,
+				5A2987942B8BF63B00220A7D /* CMQuaternion.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -227,9 +233,11 @@
 				5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */,
 				C5E590382B6379ED00328ED6 /* Shaders.metal in Sources */,
 				5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */,
+				5A2987972B8BFF1A00220A7D /* EasyARWorldTrackingSource.swift in Sources */,
 				5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */,
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
+				5A2987952B8BF63B00220A7D /* CMQuaternion.swift in Sources */,
 				5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */,
 				D61E6FE02B71CE080076031A /* VideoHandler.swift in Sources */,
 				C5E590322B6379ED00328ED6 /* ALVRClientApp.swift in Sources */,
@@ -380,7 +388,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeRight;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -426,7 +434,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeRight;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

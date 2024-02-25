@@ -6,11 +6,13 @@
 //
 
 import ARKit
+import CoreMotion
 
 final class WorldTracker {
     enum WorldTrackingMode {
         case arSession
-        case coreMotion // Not working yet
+        case easyArSession
+        case coreMotion
     }
     
     private let worldTrackingSource: WorldTrackingSource
@@ -21,6 +23,8 @@ final class WorldTracker {
         let worldTrackingSource: WorldTrackingSource
         if trackingMode == .arSession {
             worldTrackingSource = ARWorldTrackingSource()
+        } else if trackingMode == .easyArSession {
+            worldTrackingSource = StupidARWorldTrackingSource()
         } else if trackingMode == .coreMotion {
             worldTrackingSource = MotionWorldTrackingSource()
         } else {
@@ -38,7 +42,7 @@ final class WorldTracker {
     }
     
     /// Get device euler rotation
-    func getRotation() -> (Float, Float, Float) {
+    func getRotation() -> CMQuaternion {
         return worldTrackingSource.getRotation()
     }
     
@@ -46,20 +50,6 @@ final class WorldTracker {
     func getQuaterionRotation() -> AlvrQuat {
         let r = getRotation()
         
-        // Get quaternion components
-        let cr = cos(r.0 * 0.5)
-        let sr = sin(r.0 * 0.5)
-        let cp = cos(r.1 * 0.5)
-        let sp = sin(r.1 * 0.5)
-        let cy = cos(r.2 * 0.5)
-        let sy = sin(r.2 * 0.5)
-
-        // Get quaternion values
-        let w = Float(cr * cp * cy + sr * sp * sy)
-        let x = Float(sr * cp * cy - cr * sp * sy)
-        let y = Float(cr * sp * cy + sr * cp * sy)
-        let z = Float(cr * cp * sy - sr * sp * cy)
-        
-        return AlvrQuat.init(x: x, y: y, z: z, w: w)
+        return AlvrQuat.init(x: Float(r.x), y: Float(r.y), z: Float(r.z), w: Float(r.w))
     }
 }

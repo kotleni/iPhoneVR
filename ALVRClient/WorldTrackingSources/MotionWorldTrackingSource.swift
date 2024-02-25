@@ -14,7 +14,7 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
     private let motionManager: CMMotionManager
     
     private var position: (Float, Float, Float) = (0.0, 0.0, 0.0)
-    private var rotation: (Float, Float, Float) = (0.0, 0.0, 0.0)
+    private var rotation: CMQuaternion = .init()
     
     override init() {
         // dispatchQueue = DispatchQueue(label: "MotionWorldTrackingSource DispatchQueue", qos: .background)
@@ -29,24 +29,19 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
     }
     
     func start() {
-        guard motionManager.isDeviceMotionAvailable else {
-            // TODO: Handle the case where device motion is not available
-            print("Device motion is not available.")
-            return
-        }
-    
-        motionManager.startDeviceMotionUpdates(to: operationQueue) { [weak self] (motion, error) in
+        motionManager.startDeviceMotionUpdates(using: .xArbitraryZVertical, to: operationQueue) { [weak self] (motion, error) in
             guard let self = self, let motion = motion else {
                 return
             }
             
             // FIXME: Not working
-            self.position = (0, 1.1, 0)
-            //self.rotation = (Float(motion.rotationRate.x), Float(motion.rotationRate.y), Float(motion.rotationRate.z))
+            self.position = (0, 1.6, 0)
             
-            self.rotation.0 = Float(motion.userAcceleration.x)
-            self.rotation.1 = Float(motion.userAcceleration.y)
-            self.rotation.2 = Float(motion.userAcceleration.z)
+            let sensorToDisplayRotation = CMQuaternion(x: 0.0, y: 0.0, z: -0.7071067811865476, w: 0.7071067811865476)
+            let a = CMQuaternion(x: 0.0, y: 0.0, z: -0.7071067811865476, w: 0.7071067811865476)
+            let b = CMQuaternion(x: 0.0, y: 0.7071067811865476, z: 0.0, w: 0.7071067811865476)
+            self.rotation = sensorToDisplayRotation * motion.attitude.quaternion * a * b
+
         }
     }
     
@@ -58,7 +53,7 @@ class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
         return position
     }
     
-    func getRotation() -> (Float, Float, Float) {
+    func getRotation() -> CMQuaternion {
         return rotation
     }
 }

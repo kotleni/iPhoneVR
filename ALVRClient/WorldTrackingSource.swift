@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import CoreMotion
 
 protocol WorldTrackingSource {
     func getPosition() -> (Float, Float, Float)
-    func getRotation() -> (Float, Float, Float)
+    func getRotation() -> CMQuaternion
     
     func start()
     func stop()

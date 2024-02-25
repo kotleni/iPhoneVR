@@ -1,20 +1,17 @@
 //
-//  ARWorldTrackingSource.swift
+//  StupidARWorldTrackingSource.swift
 //  ALVRClient
 //
-//  Created by Viktor Varenik on 23.02.2024.
+//  Created by Viktor Varenik on 26.02.2024.
 //
 
 import CoreMotion
 import ARKit
 
-class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
+class EasyARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     private let dispatchQueue: DispatchQueue
-    private let configuration: ARWorldTrackingConfiguration
+    private let configuration: AROrientationTrackingConfiguration
     private let arSession: ARSession
-    // ARSession in this mode have very big impact for battery
-    // Maybe i should use CoreMotion?
-    // But ARSession can track position in space
     
     private var lastTickTime: Int64 = 0
     private var tps = 0
@@ -24,10 +21,10 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     private var rotation: CMQuaternion = .init()
     
     override init() {
-        dispatchQueue = .init(label: "ARWorldTrackingSource", qos: .background)
+        dispatchQueue = .init(label: "StupidARWorldTrackingSource", qos: .background)
         
         configuration = .init()
-        configuration.planeDetection = .horizontal
+        // configuration.planeDetection = .horizontal
         
         arSession = ARSession()
         
@@ -37,8 +34,16 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        if let framePosition = arSession.currentFrame?.camera.transform.columns.3 {
+            // FIXME: Need to calibrate y offset
+            // One metter offset just matched for initial position on my desk
+            position = (framePosition.x, framePosition.y + 1.0 /* 1 metter offset */, framePosition.z)
+        }
+        
+        // TODO: !!!
         if let frameEuler = arSession.currentFrame?.camera.eulerAngles {
             let r = frameEuler
+            
             // Get quaternion components
             let cr = cos(r.x * 0.5)
             let sr = sin(r.x * 0.5)
@@ -46,6 +51,7 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
             let sp = sin(r.y * 0.5)
             let cy = cos(r.z * 0.5)
             let sy = sin(r.z * 0.5)
+
             // Get quaternion values
             let w = (cr * cp * cy + sr * sp * sy)
             let x = (sr * cp * cy - cr * sp * sy)
