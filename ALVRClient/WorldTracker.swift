@@ -24,7 +24,7 @@ final class WorldTracker {
         if trackingMode == .arSession {
             worldTrackingSource = ARWorldTrackingSource()
         } else if trackingMode == .easyArSession {
-            worldTrackingSource = StupidARWorldTrackingSource()
+            worldTrackingSource = EasyARWorldTrackingSource()
         } else if trackingMode == .coreMotion {
             worldTrackingSource = MotionWorldTrackingSource()
         } else {
