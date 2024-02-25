@@ -52,8 +52,9 @@ static const CGFloat kGuidanceHeight = 116.0f;
 
 + (NSBundle *)resourceBundle {
   NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
-  NSString *resourcePath = [thisBundle pathForResource:@"sdk" ofType:@"bundle"];
+  NSString *resourcePath = [thisBundle pathForResource:@"sdk2" ofType:@"bundle"];
   if (!resourcePath) {
+      printf("Sdk bundle not found.");
     // We must be in the sdk bundle as there is no resource bundle under us.
     return thisBundle;
   }

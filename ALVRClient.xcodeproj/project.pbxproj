@@ -52,8 +52,13 @@
 		5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */; };
 		5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */; };
 		5A945A922B88BF1E00CA1254 /* MotionWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */; };
+		5A95E8032B8BCDAF007FC22C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95E8022B8BCDAF007FC22C /* SceneDelegate.swift */; };
+		5A95E8052B8BCE49007FC22C /* MainCardboardOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95E8042B8BCE49007FC22C /* MainCardboardOverlayView.swift */; };
+		5A95E8072B8BCF04007FC22C /* MainCardboardOverlayViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95E8062B8BCF04007FC22C /* MainCardboardOverlayViewDelegate.swift */; };
+		5A95E80A2B8BE086007FC22C /* sdk2.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A95E8092B8BE086007FC22C /* sdk2.bundle */; };
+		5A95E80C2B8BE762007FC22C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A95E80B2B8BE762007FC22C /* AppDelegate.swift */; };
 		5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913C2B87B709002FB88C /* WorldTracker.swift */; };
-		5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913E2B87BFF0002FB88C /* Main.swift */; };
+		5AD6913F2B87BFF0002FB88C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD6913E2B87BFF0002FB88C /* MainViewController.swift */; };
 		5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AD9D1932B889DC500FA24CE /* Int64.swift */; };
 		C588CC212B6BC7B200D00DF0 /* ALVRClientCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C588CC1F2B6BC7AA00D00DF0 /* ALVRClientCore.xcframework */; };
 		C588CC222B6BC7B200D00DF0 /* ALVRClientCore.xcframework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C588CC1F2B6BC7AA00D00DF0 /* ALVRClientCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -149,7 +154,7 @@
 		5A06CDB32B8BB14B004ED2A7 /* distortion_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortion_mesh.h; sourceTree = "<group>"; };
 		5A06CDB42B8BB14B004ED2A7 /* screen_params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen_params.h; sourceTree = "<group>"; };
 		5A06CDB62B8BB14B004ED2A7 /* cardboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cardboard.h; sourceTree = "<group>"; };
-		5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cardboard_plus.h; sourceTree = "<group>"; };
+		5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cardboard_plus.hpp; sourceTree = "<group>"; };
 		5A06CDB82B8BB14B004ED2A7 /* distortion_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortion_renderer.h; sourceTree = "<group>"; };
 		5A06CDB92B8BB14B004ED2A7 /* polynomial_radial_distortion.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polynomial_radial_distortion.cc; sourceTree = "<group>"; };
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -161,9 +166,14 @@
 		5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTrackingSource.swift; sourceTree = "<group>"; };
 		5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWorldTrackingSource.swift; sourceTree = "<group>"; };
 		5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionWorldTrackingSource.swift; sourceTree = "<group>"; };
+		5A95E8022B8BCDAF007FC22C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		5A95E8042B8BCE49007FC22C /* MainCardboardOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCardboardOverlayView.swift; sourceTree = "<group>"; };
+		5A95E8062B8BCF04007FC22C /* MainCardboardOverlayViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCardboardOverlayViewDelegate.swift; sourceTree = "<group>"; };
+		5A95E8092B8BE086007FC22C /* sdk2.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = sdk2.bundle; sourceTree = "<group>"; };
+		5A95E80B2B8BE762007FC22C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5AB8A52F2B861F9600C343FE /* ALVRClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ALVRClient.entitlements; sourceTree = "<group>"; };
 		5AD6913C2B87B709002FB88C /* WorldTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTracker.swift; sourceTree = "<group>"; };
-		5AD6913E2B87BFF0002FB88C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		5AD6913E2B87BFF0002FB88C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5AD9D1932B889DC500FA24CE /* Int64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int64.swift; sourceTree = "<group>"; };
 		71953D01095FC07E9AB6AAF6 /* libPods-ALVRClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ALVRClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C588CC1F2B6BC7AA00D00DF0 /* ALVRClientCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ALVRClientCore.xcframework; sourceTree = SOURCE_ROOT; };
@@ -361,7 +371,7 @@
 			isa = PBXGroup;
 			children = (
 				5A06CDB62B8BB14B004ED2A7 /* cardboard.h */,
-				5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.h */,
+				5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.hpp */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -428,6 +438,7 @@
 		C5E5902C2B6379ED00328ED6 /* ALVRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5A95E8092B8BE086007FC22C /* sdk2.bundle */,
 				5A81992A2B8BC25D00B2274E /* proto */,
 				5A06CD252B8BB08D004ED2A7 /* CardboardSDK */,
 				5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */,
@@ -437,7 +448,11 @@
 				5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */,
 				5AD6913C2B87B709002FB88C /* WorldTracker.swift */,
 				D61E6FDF2B71CE080076031A /* VideoHandler.swift */,
-				5AD6913E2B87BFF0002FB88C /* Main.swift */,
+				5A95E8022B8BCDAF007FC22C /* SceneDelegate.swift */,
+				5A95E80B2B8BE762007FC22C /* AppDelegate.swift */,
+				5AD6913E2B87BFF0002FB88C /* MainViewController.swift */,
+				5A95E8042B8BCE49007FC22C /* MainCardboardOverlayView.swift */,
+				5A95E8062B8BCF04007FC22C /* MainCardboardOverlayViewDelegate.swift */,
 				C5E590492B637C7E00328ED6 /* ALVRClient-Bridging-Header.h */,
 				C5E590392B6379ED00328ED6 /* ShaderTypes.h */,
 				C5E590372B6379ED00328ED6 /* Shaders.metal */,
@@ -546,6 +561,7 @@
 				C5E5903E2B6379EE00328ED6 /* Assets.xcassets in Resources */,
 				5A06CDEF2B8BB14B004ED2A7 /* proguard-rules.pro in Resources */,
 				C5E5903C2B6379ED00328ED6 /* Preview Assets.xcassets in Resources */,
+				5A95E80A2B8BE086007FC22C /* sdk2.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,21 +597,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A95E8032B8BCDAF007FC22C /* SceneDelegate.swift in Sources */,
 				5A06CDEC2B8BB14B004ED2A7 /* is_initialized.cc in Sources */,
 				5A06CDC22B8BB14B004ED2A7 /* sensor_event_producer.mm in Sources */,
 				5A06CDF62B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc in Sources */,
 				5A06CDFB2B8BB14B004ED2A7 /* polynomial_radial_distortion.cc in Sources */,
+				5A95E8052B8BCE49007FC22C /* MainCardboardOverlayView.swift in Sources */,
 				5A945A922B88BF1E00CA1254 /* MotionWorldTrackingSource.swift in Sources */,
 				5A06CDC92B8BB14B004ED2A7 /* distortion_mesh.cc in Sources */,
 				5A06CDEE2B8BB14B004ED2A7 /* matrix_3x3.cc in Sources */,
 				5A06CDED2B8BB14B004ED2A7 /* matrixutils.cc in Sources */,
 				5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */,
+				5A95E80C2B8BE762007FC22C /* AppDelegate.swift in Sources */,
 				C5E590382B6379ED00328ED6 /* Shaders.metal in Sources */,
 				5A06CDBC2B8BB14B004ED2A7 /* lowpass_filter.cc in Sources */,
 				5A8199302B8BC25D00B2274E /* cardboard_device.proto in Sources */,
 				5A06CDD32B8BB14B004ED2A7 /* device_params_helper.mm in Sources */,
 				5A06CDD22B8BB14B004ED2A7 /* nsurl_session_data_handler.mm in Sources */,
-				5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */,
+				5AD6913F2B87BFF0002FB88C /* MainViewController.swift in Sources */,
 				5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */,
 				5A06CDF72B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc in Sources */,
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
@@ -611,6 +630,7 @@
 				5A06CDBE2B8BB14B004ED2A7 /* neck_model.cc in Sources */,
 				5A06CDBA2B8BB14B004ED2A7 /* cardboard.cc in Sources */,
 				5A06CDC82B8BB14B004ED2A7 /* mean_filter.cc in Sources */,
+				5A95E8072B8BCF04007FC22C /* MainCardboardOverlayViewDelegate.swift in Sources */,
 				5A06CDF82B8BB14B004ED2A7 /* screen_params.mm in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
 				5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */,
@@ -764,6 +784,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ALVRClient/Preview Content\"";
 				DEVELOPMENT_TEAM = 534C989ZLQ;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = x86_64;
@@ -776,7 +797,7 @@
 					"${SRCROOT}/ALVRClient/proto",
 				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
-				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
+				INFOPLIST_KEY_NSCameraUsageDescription = "For AR world tracking.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Used for in game voice chat";
 				INFOPLIST_KEY_NSMotionUsageDescription = Test;
@@ -821,6 +842,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ALVRClient/Preview Content\"";
 				DEVELOPMENT_TEAM = 534C989ZLQ;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = x86_64;
@@ -833,7 +855,7 @@
 					"${SRCROOT}/ALVRClient/proto",
 				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
-				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
+				INFOPLIST_KEY_NSCameraUsageDescription = "For AR world tracking.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Used for in game voice chat";
 				INFOPLIST_KEY_NSMotionUsageDescription = Test;

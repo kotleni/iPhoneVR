@@ -34,7 +34,8 @@ void incrementDeviceParamsChangedCount() { std::atomic_fetch_add(&deviceParamsCh
 
 void showQRScanViewController() {
   UIViewController *presentingViewController = nil;
-  presentingViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+  presentingViewController = [UIApplication sharedApplication].windows.firstObject.rootViewController;
+    printf("presentingViewController = %d", presentingViewController);
   while (presentingViewController.presentedViewController) {
     presentingViewController = presentingViewController.presentedViewController;
   }
@@ -47,7 +48,6 @@ void showQRScanViewController() {
         incrementDeviceParamsChangedCount();
         [qrViewController dismissViewControllerAnimated:YES completion:nil];
       }];
-
   qrViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
   [presentingViewController presentViewController:qrViewController animated:YES completion:nil];
 }

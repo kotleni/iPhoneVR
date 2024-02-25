@@ -31,7 +31,7 @@
 #include "jni_utils/android/jni_utils.h"
 #endif
 
-#include "include/cardboard_plus.h"
+#include "./include/cardboard_plus.hpp"
 
 // TODO(b/134142617): Revisit struct/class hierarchy.
 //struct CardboardLensDistortion : cardboard::LensDistortion {};
@@ -361,6 +361,7 @@ void CardboardQrCode_saveDeviceParams(const uint8_t* uri, int size) {
 
 void CardboardQrCode_scanQrCodeAndSaveDeviceParams() {
   if (CARDBOARD_IS_NOT_INITIALIZED()) {
+    printf("CARDBOARD_IS_NOT_INITIALIZED in CardboardQrCode_scanQrCodeAndSaveDeviceParams");
     return;
   }
   cardboard::qrcode::scanQrCodeAndSaveDeviceParams();
