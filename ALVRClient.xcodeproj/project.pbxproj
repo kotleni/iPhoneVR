@@ -11,6 +11,39 @@
 		5A06CC092B8B6C42004ED2A7 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC082B8B6C42004ED2A7 /* Double.swift */; };
 		5A06CC0C2B8B6DB0004ED2A7 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC0B2B8B6DB0004ED2A7 /* Float.swift */; };
 		5A06CC0E2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC0D2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift */; };
+		5A06CDBA2B8BB14B004ED2A7 /* cardboard.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD262B8BB14A004ED2A7 /* cardboard.cc */; };
+		5A06CDBB2B8BB14B004ED2A7 /* lens_distortion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD272B8BB14A004ED2A7 /* lens_distortion.cc */; };
+		5A06CDBC2B8BB14B004ED2A7 /* lowpass_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD2B2B8BB14A004ED2A7 /* lowpass_filter.cc */; };
+		5A06CDBD2B8BB14B004ED2A7 /* median_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD2C2B8BB14A004ED2A7 /* median_filter.cc */; };
+		5A06CDBE2B8BB14B004ED2A7 /* neck_model.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD2D2B8BB14A004ED2A7 /* neck_model.cc */; };
+		5A06CDBF2B8BB14B004ED2A7 /* sensor_fusion_ekf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD2E2B8BB14A004ED2A7 /* sensor_fusion_ekf.cc */; };
+		5A06CDC02B8BB14B004ED2A7 /* device_gyroscope_sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD322B8BB14A004ED2A7 /* device_gyroscope_sensor.mm */; };
+		5A06CDC12B8BB14B004ED2A7 /* device_accelerometer_sensor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD342B8BB14A004ED2A7 /* device_accelerometer_sensor.mm */; };
+		5A06CDC22B8BB14B004ED2A7 /* sensor_event_producer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD352B8BB14A004ED2A7 /* sensor_event_producer.mm */; };
+		5A06CDC32B8BB14B004ED2A7 /* sensor_helper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD362B8BB14A004ED2A7 /* sensor_helper.mm */; };
+		5A06CDC72B8BB14B004ED2A7 /* gyroscope_bias_estimator.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD402B8BB14A004ED2A7 /* gyroscope_bias_estimator.cc */; };
+		5A06CDC82B8BB14B004ED2A7 /* mean_filter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD452B8BB14A004ED2A7 /* mean_filter.cc */; };
+		5A06CDC92B8BB14B004ED2A7 /* distortion_mesh.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD462B8BB14A004ED2A7 /* distortion_mesh.cc */; };
+		5A06CDCA2B8BB14B004ED2A7 /* cardboard_api.lds in Resources */ = {isa = PBXBuildFile; fileRef = 5A06CD472B8BB14A004ED2A7 /* cardboard_api.lds */; };
+		5A06CDCE2B8BB14B004ED2A7 /* head_tracker.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD542B8BB14B004ED2A7 /* head_tracker.cc */; };
+		5A06CDCF2B8BB14B004ED2A7 /* qr_scan_view_controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD592B8BB14B004ED2A7 /* qr_scan_view_controller.mm */; };
+		5A06CDD02B8BB14B004ED2A7 /* sdk.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A06CD5A2B8BB14B004ED2A7 /* sdk.bundle */; };
+		5A06CDD12B8BB14B004ED2A7 /* qr_code.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD5B2B8BB14B004ED2A7 /* qr_code.mm */; };
+		5A06CDD22B8BB14B004ED2A7 /* nsurl_session_data_handler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD5E2B8BB14B004ED2A7 /* nsurl_session_data_handler.mm */; };
+		5A06CDD32B8BB14B004ED2A7 /* device_params_helper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD5F2B8BB14B004ED2A7 /* device_params_helper.mm */; };
+		5A06CDE82B8BB14B004ED2A7 /* cardboard_v1.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD822B8BB14B004ED2A7 /* cardboard_v1.cc */; };
+		5A06CDE92B8BB14B004ED2A7 /* rotation.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD852B8BB14B004ED2A7 /* rotation.cc */; };
+		5A06CDEA2B8BB14B004ED2A7 /* vectorutils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD862B8BB14B004ED2A7 /* vectorutils.cc */; };
+		5A06CDEB2B8BB14B004ED2A7 /* matrix_4x4.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD882B8BB14B004ED2A7 /* matrix_4x4.cc */; };
+		5A06CDEC2B8BB14B004ED2A7 /* is_initialized.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD8B2B8BB14B004ED2A7 /* is_initialized.cc */; };
+		5A06CDED2B8BB14B004ED2A7 /* matrixutils.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD922B8BB14B004ED2A7 /* matrixutils.cc */; };
+		5A06CDEE2B8BB14B004ED2A7 /* matrix_3x3.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD932B8BB14B004ED2A7 /* matrix_3x3.cc */; };
+		5A06CDEF2B8BB14B004ED2A7 /* proguard-rules.pro in Resources */ = {isa = PBXBuildFile; fileRef = 5A06CD952B8BB14B004ED2A7 /* proguard-rules.pro */; };
+		5A06CDF02B8BB14B004ED2A7 /* metal_distortion_renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CD982B8BB14B004ED2A7 /* metal_distortion_renderer.mm */; };
+		5A06CDF62B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CDA42B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc */; };
+		5A06CDF72B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CDA52B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc */; };
+		5A06CDF82B8BB14B004ED2A7 /* screen_params.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CDA92B8BB14B004ED2A7 /* screen_params.mm */; };
+		5A06CDFB2B8BB14B004ED2A7 /* polynomial_radial_distortion.cc in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CDB92B8BB14B004ED2A7 /* polynomial_radial_distortion.cc */; };
 		5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */; };
 		5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8A2B88A12100CA1254 /* Renderer.swift */; };
 		5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */; };
@@ -47,6 +80,75 @@
 		5A06CC082B8B6C42004ED2A7 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		5A06CC0B2B8B6DB0004ED2A7 /* Float.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float.swift; sourceTree = "<group>"; };
 		5A06CC0D2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsWorldTrackingSource.swift; sourceTree = "<group>"; };
+		5A06CD262B8BB14A004ED2A7 /* cardboard.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cardboard.cc; sourceTree = "<group>"; };
+		5A06CD272B8BB14A004ED2A7 /* lens_distortion.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lens_distortion.cc; sourceTree = "<group>"; };
+		5A06CD282B8BB14A004ED2A7 /* polynomial_radial_distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polynomial_radial_distortion.h; sourceTree = "<group>"; };
+		5A06CD2A2B8BB14A004ED2A7 /* device_accelerometer_sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device_accelerometer_sensor.h; sourceTree = "<group>"; };
+		5A06CD2B2B8BB14A004ED2A7 /* lowpass_filter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lowpass_filter.cc; sourceTree = "<group>"; };
+		5A06CD2C2B8BB14A004ED2A7 /* median_filter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = median_filter.cc; sourceTree = "<group>"; };
+		5A06CD2D2B8BB14A004ED2A7 /* neck_model.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = neck_model.cc; sourceTree = "<group>"; };
+		5A06CD2E2B8BB14A004ED2A7 /* sensor_fusion_ekf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sensor_fusion_ekf.cc; sourceTree = "<group>"; };
+		5A06CD2F2B8BB14A004ED2A7 /* lowpass_filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lowpass_filter.h; sourceTree = "<group>"; };
+		5A06CD302B8BB14A004ED2A7 /* sensor_fusion_ekf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sensor_fusion_ekf.h; sourceTree = "<group>"; };
+		5A06CD322B8BB14A004ED2A7 /* device_gyroscope_sensor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = device_gyroscope_sensor.mm; sourceTree = "<group>"; };
+		5A06CD332B8BB14A004ED2A7 /* sensor_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sensor_helper.h; sourceTree = "<group>"; };
+		5A06CD342B8BB14A004ED2A7 /* device_accelerometer_sensor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = device_accelerometer_sensor.mm; sourceTree = "<group>"; };
+		5A06CD352B8BB14A004ED2A7 /* sensor_event_producer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = sensor_event_producer.mm; sourceTree = "<group>"; };
+		5A06CD362B8BB14A004ED2A7 /* sensor_helper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = sensor_helper.mm; sourceTree = "<group>"; };
+		5A06CD372B8BB14A004ED2A7 /* gyroscope_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gyroscope_data.h; sourceTree = "<group>"; };
+		5A06CD382B8BB14A004ED2A7 /* accelerometer_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = accelerometer_data.h; sourceTree = "<group>"; };
+		5A06CD392B8BB14A004ED2A7 /* device_gyroscope_sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device_gyroscope_sensor.h; sourceTree = "<group>"; };
+		5A06CD3A2B8BB14A004ED2A7 /* neck_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = neck_model.h; sourceTree = "<group>"; };
+		5A06CD3B2B8BB14A004ED2A7 /* mean_filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mean_filter.h; sourceTree = "<group>"; };
+		5A06CD402B8BB14A004ED2A7 /* gyroscope_bias_estimator.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gyroscope_bias_estimator.cc; sourceTree = "<group>"; };
+		5A06CD412B8BB14A004ED2A7 /* gyroscope_bias_estimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gyroscope_bias_estimator.h; sourceTree = "<group>"; };
+		5A06CD422B8BB14A004ED2A7 /* rotation_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotation_state.h; sourceTree = "<group>"; };
+		5A06CD432B8BB14A004ED2A7 /* sensor_event_producer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sensor_event_producer.h; sourceTree = "<group>"; };
+		5A06CD442B8BB14A004ED2A7 /* median_filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = median_filter.h; sourceTree = "<group>"; };
+		5A06CD452B8BB14A004ED2A7 /* mean_filter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mean_filter.cc; sourceTree = "<group>"; };
+		5A06CD462B8BB14A004ED2A7 /* distortion_mesh.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = distortion_mesh.cc; sourceTree = "<group>"; };
+		5A06CD472B8BB14A004ED2A7 /* cardboard_api.lds */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cardboard_api.lds; sourceTree = "<group>"; };
+		5A06CD542B8BB14B004ED2A7 /* head_tracker.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = head_tracker.cc; sourceTree = "<group>"; };
+		5A06CD552B8BB14B004ED2A7 /* lens_distortion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lens_distortion.h; sourceTree = "<group>"; };
+		5A06CD562B8BB14B004ED2A7 /* qr_code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qr_code.h; sourceTree = "<group>"; };
+		5A06CD592B8BB14B004ED2A7 /* qr_scan_view_controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = qr_scan_view_controller.mm; sourceTree = "<group>"; };
+		5A06CD5A2B8BB14B004ED2A7 /* sdk.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = sdk.bundle; sourceTree = "<group>"; };
+		5A06CD5B2B8BB14B004ED2A7 /* qr_code.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = qr_code.mm; sourceTree = "<group>"; };
+		5A06CD5C2B8BB14B004ED2A7 /* device_params_helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = device_params_helper.h; sourceTree = "<group>"; };
+		5A06CD5D2B8BB14B004ED2A7 /* nsurl_session_data_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurl_session_data_handler.h; sourceTree = "<group>"; };
+		5A06CD5E2B8BB14B004ED2A7 /* nsurl_session_data_handler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = nsurl_session_data_handler.mm; sourceTree = "<group>"; };
+		5A06CD5F2B8BB14B004ED2A7 /* device_params_helper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = device_params_helper.mm; sourceTree = "<group>"; };
+		5A06CD602B8BB14B004ED2A7 /* qr_scan_view_controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qr_scan_view_controller.h; sourceTree = "<group>"; };
+		5A06CD822B8BB14B004ED2A7 /* cardboard_v1.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cardboard_v1.cc; sourceTree = "<group>"; };
+		5A06CD832B8BB14B004ED2A7 /* cardboard_v1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cardboard_v1.h; sourceTree = "<group>"; };
+		5A06CD852B8BB14B004ED2A7 /* rotation.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rotation.cc; sourceTree = "<group>"; };
+		5A06CD862B8BB14B004ED2A7 /* vectorutils.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vectorutils.cc; sourceTree = "<group>"; };
+		5A06CD872B8BB14B004ED2A7 /* rotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotation.h; sourceTree = "<group>"; };
+		5A06CD882B8BB14B004ED2A7 /* matrix_4x4.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_4x4.cc; sourceTree = "<group>"; };
+		5A06CD892B8BB14B004ED2A7 /* logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logging.h; sourceTree = "<group>"; };
+		5A06CD8A2B8BB14B004ED2A7 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		5A06CD8B2B8BB14B004ED2A7 /* is_initialized.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = is_initialized.cc; sourceTree = "<group>"; };
+		5A06CD8C2B8BB14B004ED2A7 /* matrixutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrixutils.h; sourceTree = "<group>"; };
+		5A06CD8D2B8BB14B004ED2A7 /* vectorutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vectorutils.h; sourceTree = "<group>"; };
+		5A06CD8E2B8BB14B004ED2A7 /* matrix_3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix_3x3.h; sourceTree = "<group>"; };
+		5A06CD8F2B8BB14B004ED2A7 /* matrix_4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matrix_4x4.h; sourceTree = "<group>"; };
+		5A06CD902B8BB14B004ED2A7 /* is_initialized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_initialized.h; sourceTree = "<group>"; };
+		5A06CD912B8BB14B004ED2A7 /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		5A06CD922B8BB14B004ED2A7 /* matrixutils.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixutils.cc; sourceTree = "<group>"; };
+		5A06CD932B8BB14B004ED2A7 /* matrix_3x3.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrix_3x3.cc; sourceTree = "<group>"; };
+		5A06CD942B8BB14B004ED2A7 /* is_arg_null.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = is_arg_null.h; sourceTree = "<group>"; };
+		5A06CD952B8BB14B004ED2A7 /* proguard-rules.pro */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "proguard-rules.pro"; sourceTree = "<group>"; };
+		5A06CD982B8BB14B004ED2A7 /* metal_distortion_renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = metal_distortion_renderer.mm; sourceTree = "<group>"; };
+		5A06CDA42B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opengl_es3_distortion_renderer.cc; sourceTree = "<group>"; };
+		5A06CDA52B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opengl_es2_distortion_renderer.cc; sourceTree = "<group>"; };
+		5A06CDA62B8BB14B004ED2A7 /* head_tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = head_tracker.h; sourceTree = "<group>"; };
+		5A06CDA92B8BB14B004ED2A7 /* screen_params.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = screen_params.mm; sourceTree = "<group>"; };
+		5A06CDB32B8BB14B004ED2A7 /* distortion_mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortion_mesh.h; sourceTree = "<group>"; };
+		5A06CDB42B8BB14B004ED2A7 /* screen_params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen_params.h; sourceTree = "<group>"; };
+		5A06CDB62B8BB14B004ED2A7 /* cardboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cardboard.h; sourceTree = "<group>"; };
+		5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cardboard_plus.h; sourceTree = "<group>"; };
+		5A06CDB82B8BB14B004ED2A7 /* distortion_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortion_renderer.h; sourceTree = "<group>"; };
+		5A06CDB92B8BB14B004ED2A7 /* polynomial_radial_distortion.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polynomial_radial_distortion.cc; sourceTree = "<group>"; };
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A945A8A2B88A12100CA1254 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTrackingSource.swift; sourceTree = "<group>"; };
@@ -88,8 +190,173 @@
 		5A06CD252B8BB08D004ED2A7 /* CardboardSDK */ = {
 			isa = PBXGroup;
 			children = (
+				5A06CD472B8BB14A004ED2A7 /* cardboard_api.lds */,
+				5A06CD262B8BB14A004ED2A7 /* cardboard.cc */,
+				5A06CD482B8BB14A004ED2A7 /* device_params */,
+				5A06CD462B8BB14A004ED2A7 /* distortion_mesh.cc */,
+				5A06CDB32B8BB14B004ED2A7 /* distortion_mesh.h */,
+				5A06CDB82B8BB14B004ED2A7 /* distortion_renderer.h */,
+				5A06CD542B8BB14B004ED2A7 /* head_tracker.cc */,
+				5A06CDA62B8BB14B004ED2A7 /* head_tracker.h */,
+				5A06CDB52B8BB14B004ED2A7 /* include */,
+				5A06CD272B8BB14A004ED2A7 /* lens_distortion.cc */,
+				5A06CD552B8BB14B004ED2A7 /* lens_distortion.h */,
+				5A06CDB92B8BB14B004ED2A7 /* polynomial_radial_distortion.cc */,
+				5A06CD282B8BB14A004ED2A7 /* polynomial_radial_distortion.h */,
+				5A06CD952B8BB14B004ED2A7 /* proguard-rules.pro */,
+				5A06CD562B8BB14B004ED2A7 /* qr_code.h */,
+				5A06CD572B8BB14B004ED2A7 /* qrcode */,
+				5A06CD962B8BB14B004ED2A7 /* rendering */,
+				5A06CDA72B8BB14B004ED2A7 /* screen_params */,
+				5A06CDB42B8BB14B004ED2A7 /* screen_params.h */,
+				5A06CD292B8BB14A004ED2A7 /* sensors */,
+				5A06CD842B8BB14B004ED2A7 /* util */,
 			);
 			path = CardboardSDK;
+			sourceTree = "<group>";
+		};
+		5A06CD292B8BB14A004ED2A7 /* sensors */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD2A2B8BB14A004ED2A7 /* device_accelerometer_sensor.h */,
+				5A06CD2B2B8BB14A004ED2A7 /* lowpass_filter.cc */,
+				5A06CD2C2B8BB14A004ED2A7 /* median_filter.cc */,
+				5A06CD2D2B8BB14A004ED2A7 /* neck_model.cc */,
+				5A06CD2E2B8BB14A004ED2A7 /* sensor_fusion_ekf.cc */,
+				5A06CD2F2B8BB14A004ED2A7 /* lowpass_filter.h */,
+				5A06CD302B8BB14A004ED2A7 /* sensor_fusion_ekf.h */,
+				5A06CD312B8BB14A004ED2A7 /* ios */,
+				5A06CD372B8BB14A004ED2A7 /* gyroscope_data.h */,
+				5A06CD382B8BB14A004ED2A7 /* accelerometer_data.h */,
+				5A06CD392B8BB14A004ED2A7 /* device_gyroscope_sensor.h */,
+				5A06CD3A2B8BB14A004ED2A7 /* neck_model.h */,
+				5A06CD3B2B8BB14A004ED2A7 /* mean_filter.h */,
+				5A06CD402B8BB14A004ED2A7 /* gyroscope_bias_estimator.cc */,
+				5A06CD412B8BB14A004ED2A7 /* gyroscope_bias_estimator.h */,
+				5A06CD422B8BB14A004ED2A7 /* rotation_state.h */,
+				5A06CD432B8BB14A004ED2A7 /* sensor_event_producer.h */,
+				5A06CD442B8BB14A004ED2A7 /* median_filter.h */,
+				5A06CD452B8BB14A004ED2A7 /* mean_filter.cc */,
+			);
+			path = sensors;
+			sourceTree = "<group>";
+		};
+		5A06CD312B8BB14A004ED2A7 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD322B8BB14A004ED2A7 /* device_gyroscope_sensor.mm */,
+				5A06CD332B8BB14A004ED2A7 /* sensor_helper.h */,
+				5A06CD342B8BB14A004ED2A7 /* device_accelerometer_sensor.mm */,
+				5A06CD352B8BB14A004ED2A7 /* sensor_event_producer.mm */,
+				5A06CD362B8BB14A004ED2A7 /* sensor_helper.mm */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		5A06CD482B8BB14A004ED2A7 /* device_params */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = device_params;
+			sourceTree = "<group>";
+		};
+		5A06CD572B8BB14B004ED2A7 /* qrcode */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD582B8BB14B004ED2A7 /* ios */,
+				5A06CD812B8BB14B004ED2A7 /* cardboard_v1 */,
+			);
+			path = qrcode;
+			sourceTree = "<group>";
+		};
+		5A06CD582B8BB14B004ED2A7 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD592B8BB14B004ED2A7 /* qr_scan_view_controller.mm */,
+				5A06CD5A2B8BB14B004ED2A7 /* sdk.bundle */,
+				5A06CD5B2B8BB14B004ED2A7 /* qr_code.mm */,
+				5A06CD5C2B8BB14B004ED2A7 /* device_params_helper.h */,
+				5A06CD5D2B8BB14B004ED2A7 /* nsurl_session_data_handler.h */,
+				5A06CD5E2B8BB14B004ED2A7 /* nsurl_session_data_handler.mm */,
+				5A06CD5F2B8BB14B004ED2A7 /* device_params_helper.mm */,
+				5A06CD602B8BB14B004ED2A7 /* qr_scan_view_controller.h */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		5A06CD812B8BB14B004ED2A7 /* cardboard_v1 */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD822B8BB14B004ED2A7 /* cardboard_v1.cc */,
+				5A06CD832B8BB14B004ED2A7 /* cardboard_v1.h */,
+			);
+			path = cardboard_v1;
+			sourceTree = "<group>";
+		};
+		5A06CD842B8BB14B004ED2A7 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD852B8BB14B004ED2A7 /* rotation.cc */,
+				5A06CD862B8BB14B004ED2A7 /* vectorutils.cc */,
+				5A06CD872B8BB14B004ED2A7 /* rotation.h */,
+				5A06CD882B8BB14B004ED2A7 /* matrix_4x4.cc */,
+				5A06CD892B8BB14B004ED2A7 /* logging.h */,
+				5A06CD8A2B8BB14B004ED2A7 /* constants.h */,
+				5A06CD8B2B8BB14B004ED2A7 /* is_initialized.cc */,
+				5A06CD8C2B8BB14B004ED2A7 /* matrixutils.h */,
+				5A06CD8D2B8BB14B004ED2A7 /* vectorutils.h */,
+				5A06CD8E2B8BB14B004ED2A7 /* matrix_3x3.h */,
+				5A06CD8F2B8BB14B004ED2A7 /* matrix_4x4.h */,
+				5A06CD902B8BB14B004ED2A7 /* is_initialized.h */,
+				5A06CD912B8BB14B004ED2A7 /* vector.h */,
+				5A06CD922B8BB14B004ED2A7 /* matrixutils.cc */,
+				5A06CD932B8BB14B004ED2A7 /* matrix_3x3.cc */,
+				5A06CD942B8BB14B004ED2A7 /* is_arg_null.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		5A06CD962B8BB14B004ED2A7 /* rendering */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD972B8BB14B004ED2A7 /* ios */,
+				5A06CDA42B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc */,
+				5A06CDA52B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc */,
+			);
+			path = rendering;
+			sourceTree = "<group>";
+		};
+		5A06CD972B8BB14B004ED2A7 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CD982B8BB14B004ED2A7 /* metal_distortion_renderer.mm */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		5A06CDA72B8BB14B004ED2A7 /* screen_params */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CDA82B8BB14B004ED2A7 /* ios */,
+			);
+			path = screen_params;
+			sourceTree = "<group>";
+		};
+		5A06CDA82B8BB14B004ED2A7 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CDA92B8BB14B004ED2A7 /* screen_params.mm */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		5A06CDB52B8BB14B004ED2A7 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				5A06CDB62B8BB14B004ED2A7 /* cardboard.h */,
+				5A06CDB72B8BB14B004ED2A7 /* cardboard_plus.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */ = {
@@ -184,12 +451,23 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		5A06CDFC2B8BB1A0004ED2A7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		C5E590292B6379ED00328ED6 /* ALVRClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5E590422B6379EE00328ED6 /* Build configuration list for PBXNativeTarget "ALVRClient" */;
 			buildPhases = (
 				737C1862AF53618F0E4D378A /* [CP] Check Pods Manifest.lock */,
+				5A06CDFC2B8BB1A0004ED2A7 /* Headers */,
 				C5E590262B6379ED00328ED6 /* Sources */,
 				C5E590272B6379ED00328ED6 /* Frameworks */,
 				C5E590282B6379ED00328ED6 /* Resources */,
@@ -242,8 +520,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A06CDD02B8BB14B004ED2A7 /* sdk.bundle in Resources */,
 				5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */,
+				5A06CDCA2B8BB14B004ED2A7 /* cardboard_api.lds in Resources */,
 				C5E5903E2B6379EE00328ED6 /* Assets.xcassets in Resources */,
+				5A06CDEF2B8BB14B004ED2A7 /* proguard-rules.pro in Resources */,
 				C5E5903C2B6379ED00328ED6 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,18 +561,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A06CDEC2B8BB14B004ED2A7 /* is_initialized.cc in Sources */,
+				5A06CDC22B8BB14B004ED2A7 /* sensor_event_producer.mm in Sources */,
+				5A06CDF62B8BB14B004ED2A7 /* opengl_es3_distortion_renderer.cc in Sources */,
+				5A06CDFB2B8BB14B004ED2A7 /* polynomial_radial_distortion.cc in Sources */,
 				5A945A922B88BF1E00CA1254 /* MotionWorldTrackingSource.swift in Sources */,
+				5A06CDC92B8BB14B004ED2A7 /* distortion_mesh.cc in Sources */,
+				5A06CDEE2B8BB14B004ED2A7 /* matrix_3x3.cc in Sources */,
+				5A06CDED2B8BB14B004ED2A7 /* matrixutils.cc in Sources */,
 				5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */,
 				C5E590382B6379ED00328ED6 /* Shaders.metal in Sources */,
+				5A06CDBC2B8BB14B004ED2A7 /* lowpass_filter.cc in Sources */,
+				5A06CDD32B8BB14B004ED2A7 /* device_params_helper.mm in Sources */,
+				5A06CDD22B8BB14B004ED2A7 /* nsurl_session_data_handler.mm in Sources */,
 				5AD6913F2B87BFF0002FB88C /* Main.swift in Sources */,
 				5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */,
+				5A06CDF72B8BB14B004ED2A7 /* opengl_es2_distortion_renderer.cc in Sources */,
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
+				5A06CDC72B8BB14B004ED2A7 /* gyroscope_bias_estimator.cc in Sources */,
+				5A06CDCE2B8BB14B004ED2A7 /* head_tracker.cc in Sources */,
+				5A06CDE82B8BB14B004ED2A7 /* cardboard_v1.cc in Sources */,
+				5A06CDE92B8BB14B004ED2A7 /* rotation.cc in Sources */,
+				5A06CDBB2B8BB14B004ED2A7 /* lens_distortion.cc in Sources */,
+				5A06CDC12B8BB14B004ED2A7 /* device_accelerometer_sensor.mm in Sources */,
+				5A06CDBF2B8BB14B004ED2A7 /* sensor_fusion_ekf.cc in Sources */,
+				5A06CDEA2B8BB14B004ED2A7 /* vectorutils.cc in Sources */,
+				5A06CDC02B8BB14B004ED2A7 /* device_gyroscope_sensor.mm in Sources */,
+				5A06CDBE2B8BB14B004ED2A7 /* neck_model.cc in Sources */,
+				5A06CDBA2B8BB14B004ED2A7 /* cardboard.cc in Sources */,
+				5A06CDC82B8BB14B004ED2A7 /* mean_filter.cc in Sources */,
+				5A06CDF82B8BB14B004ED2A7 /* screen_params.mm in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
 				5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */,
 				5A06CC0C2B8B6DB0004ED2A7 /* Float.swift in Sources */,
 				D61E6FE02B71CE080076031A /* VideoHandler.swift in Sources */,
+				5A06CDEB2B8BB14B004ED2A7 /* matrix_4x4.cc in Sources */,
+				5A06CDC32B8BB14B004ED2A7 /* sensor_helper.mm in Sources */,
+				5A06CDBD2B8BB14B004ED2A7 /* median_filter.cc in Sources */,
+				5A06CDF02B8BB14B004ED2A7 /* metal_distortion_renderer.mm in Sources */,
+				5A06CDD12B8BB14B004ED2A7 /* qr_code.mm in Sources */,
 				5A06CC092B8B6C42004ED2A7 /* Double.swift in Sources */,
 				C5E590322B6379ED00328ED6 /* ALVRClientApp.swift in Sources */,
+				5A06CDCF2B8BB14B004ED2A7 /* qr_scan_view_controller.mm in Sources */,
 				5A06CC0E2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,6 +733,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 400737A07DAABA5AB31A77D3 /* Pods-ALVRClient.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APPLY_RULES_IN_COPY_HEADERS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ALVRClient/ALVRClient.entitlements;
@@ -433,6 +746,12 @@
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = x86_64;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/ALVRClient/CardboardSDK",
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Protobuf-C++\"",
+				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
@@ -453,6 +772,7 @@
 					"$(PROJECT_DIR)",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULEMAP_PRIVATE_FILE = ALVRClient/CardboardSDK/;
 				PRODUCT_BUNDLE_IDENTIFIER = kotleni.ALVRClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -469,6 +789,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EDFD5959094ECF215D1D8DBF /* Pods-ALVRClient.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APPLY_RULES_IN_COPY_HEADERS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ALVRClient/ALVRClient.entitlements;
@@ -480,6 +802,12 @@
 				ENABLE_PREVIEWS = YES;
 				EXCLUDED_ARCHS = x86_64;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/ALVRClient/CardboardSDK",
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Protobuf-C++\"",
+				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
@@ -500,6 +828,7 @@
 					"$(PROJECT_DIR)",
 				);
 				MARKETING_VERSION = 1.0;
+				MODULEMAP_PRIVATE_FILE = ALVRClient/CardboardSDK/;
 				PRODUCT_BUNDLE_IDENTIFIER = kotleni.ALVRClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
