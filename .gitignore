@@ -4,3 +4,4 @@ alvrrepack
 Override.xcconfig
 xcuserdata/
 .DS_Store
+Pods/

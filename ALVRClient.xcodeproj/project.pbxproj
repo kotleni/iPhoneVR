@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A20E53E805636E2A05D2B10 /* libPods-ALVRClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71953D01095FC07E9AB6AAF6 /* libPods-ALVRClient.a */; };
+		5A06CC092B8B6C42004ED2A7 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC082B8B6C42004ED2A7 /* Double.swift */; };
+		5A06CC0C2B8B6DB0004ED2A7 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC0B2B8B6DB0004ED2A7 /* Float.swift */; };
+		5A06CC0E2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A06CC0D2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift */; };
 		5A4229242B8761B600AEE1C2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */; };
 		5A945A8B2B88A12100CA1254 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8A2B88A12100CA1254 /* Renderer.swift */; };
 		5A945A8D2B88BC1D00CA1254 /* WorldTrackingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */; };
@@ -39,6 +43,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		400737A07DAABA5AB31A77D3 /* Pods-ALVRClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ALVRClient.debug.xcconfig"; path = "Target Support Files/Pods-ALVRClient/Pods-ALVRClient.debug.xcconfig"; sourceTree = "<group>"; };
+		5A06CC082B8B6C42004ED2A7 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		5A06CC0B2B8B6DB0004ED2A7 /* Float.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float.swift; sourceTree = "<group>"; };
+		5A06CC0D2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPodsWorldTrackingSource.swift; sourceTree = "<group>"; };
 		5A4229232B8761B600AEE1C2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5A945A8A2B88A12100CA1254 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		5A945A8C2B88BC1D00CA1254 /* WorldTrackingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTrackingSource.swift; sourceTree = "<group>"; };
@@ -48,6 +56,7 @@
 		5AD6913C2B87B709002FB88C /* WorldTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldTracker.swift; sourceTree = "<group>"; };
 		5AD6913E2B87BFF0002FB88C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		5AD9D1932B889DC500FA24CE /* Int64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int64.swift; sourceTree = "<group>"; };
+		71953D01095FC07E9AB6AAF6 /* libPods-ALVRClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ALVRClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C588CC1F2B6BC7AA00D00DF0 /* ALVRClientCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = ALVRClientCore.xcframework; sourceTree = SOURCE_ROOT; };
 		C5E5902A2B6379ED00328ED6 /* ALVRClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ALVRClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5E590312B6379ED00328ED6 /* ALVRClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ALVRClientApp.swift; sourceTree = "<group>"; };
@@ -60,6 +69,7 @@
 		D61E6FDF2B71CE080076031A /* VideoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoHandler.swift; sourceTree = "<group>"; };
 		D68FA8042B73D5DD0052B7FF /* ALVRClient.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ALVRClient.xcconfig; sourceTree = "<group>"; };
 		D68FA8052B73D6260052B7FF /* Override.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Override.xcconfig; sourceTree = "<group>"; };
+		EDFD5959094ECF215D1D8DBF /* Pods-ALVRClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ALVRClient.release.xcconfig"; path = "Target Support Files/Pods-ALVRClient/Pods-ALVRClient.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,17 +78,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				C588CC212B6BC7B200D00DF0 /* ALVRClientCore.xcframework in Frameworks */,
+				1A20E53E805636E2A05D2B10 /* libPods-ALVRClient.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A06CD252B8BB08D004ED2A7 /* CardboardSDK */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CardboardSDK;
+			sourceTree = "<group>";
+		};
 		5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */ = {
 			isa = PBXGroup;
 			children = (
 				5A945A8F2B88BC7300CA1254 /* ARWorldTrackingSource.swift */,
 				5A945A912B88BF1E00CA1254 /* MotionWorldTrackingSource.swift */,
+				5A06CC0D2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift */,
 			);
 			path = WorldTrackingSources;
 			sourceTree = "<group>";
@@ -87,8 +106,18 @@
 			isa = PBXGroup;
 			children = (
 				5AD9D1932B889DC500FA24CE /* Int64.swift */,
+				5A06CC082B8B6C42004ED2A7 /* Double.swift */,
+				5A06CC0B2B8B6DB0004ED2A7 /* Float.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		99817CD912E95FB65EBC5D73 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				71953D01095FC07E9AB6AAF6 /* libPods-ALVRClient.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C5E590212B6379ED00328ED6 = {
@@ -97,8 +126,9 @@
 				D68FA8042B73D5DD0052B7FF /* ALVRClient.xcconfig */,
 				D68FA8052B73D6260052B7FF /* Override.xcconfig */,
 				C5E5902C2B6379ED00328ED6 /* ALVRClient */,
-				C5E5902D2B6379ED00328ED6 /* Packages */,
 				C5E5902B2B6379ED00328ED6 /* Products */,
+				F3DEA2325323A2ADBB3C06A1 /* Pods */,
+				99817CD912E95FB65EBC5D73 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,6 +143,7 @@
 		C5E5902C2B6379ED00328ED6 /* ALVRClient */ = {
 			isa = PBXGroup;
 			children = (
+				5A06CD252B8BB08D004ED2A7 /* CardboardSDK */,
 				5A945A8E2B88BC6100CA1254 /* WorldTrackingSources */,
 				5AD9D1922B889D3900FA24CE /* Extensions */,
 				C5E590312B6379ED00328ED6 /* ALVRClientApp.swift */,
@@ -134,19 +165,21 @@
 			path = ALVRClient;
 			sourceTree = "<group>";
 		};
-		C5E5902D2B6379ED00328ED6 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Packages;
-			sourceTree = "<group>";
-		};
 		C5E5903A2B6379ED00328ED6 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
 				C5E5903B2B6379ED00328ED6 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		F3DEA2325323A2ADBB3C06A1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				400737A07DAABA5AB31A77D3 /* Pods-ALVRClient.debug.xcconfig */,
+				EDFD5959094ECF215D1D8DBF /* Pods-ALVRClient.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +189,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5E590422B6379EE00328ED6 /* Build configuration list for PBXNativeTarget "ALVRClient" */;
 			buildPhases = (
+				737C1862AF53618F0E4D378A /* [CP] Check Pods Manifest.lock */,
 				C5E590262B6379ED00328ED6 /* Sources */,
 				C5E590272B6379ED00328ED6 /* Frameworks */,
 				C5E590282B6379ED00328ED6 /* Resources */,
@@ -166,8 +200,6 @@
 			dependencies = (
 			);
 			name = ALVRClient;
-			packageProductDependencies = (
-			);
 			productName = ALVRClient;
 			productReference = C5E5902A2B6379ED00328ED6 /* ALVRClient.app */;
 			productType = "com.apple.product-type.application";
@@ -218,6 +250,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		737C1862AF53618F0E4D378A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ALVRClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C5E590262B6379ED00328ED6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -231,8 +288,11 @@
 				5AD9D1942B889DC500FA24CE /* Int64.swift in Sources */,
 				5AD6913D2B87B709002FB88C /* WorldTracker.swift in Sources */,
 				5A945A902B88BC7300CA1254 /* ARWorldTrackingSource.swift in Sources */,
+				5A06CC0C2B8B6DB0004ED2A7 /* Float.swift in Sources */,
 				D61E6FE02B71CE080076031A /* VideoHandler.swift in Sources */,
+				5A06CC092B8B6C42004ED2A7 /* Double.swift in Sources */,
 				C5E590322B6379ED00328ED6 /* ALVRClientApp.swift in Sources */,
+				5A06CC0E2B8B740E004ED2A7 /* AirPodsWorldTrackingSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +420,7 @@
 		};
 		C5E590432B6379EE00328ED6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D68FA8042B73D5DD0052B7FF /* ALVRClient.xcconfig */;
+			baseConfigurationReference = 400737A07DAABA5AB31A77D3 /* Pods-ALVRClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -377,6 +437,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Used for in game voice chat";
+				INFOPLIST_KEY_NSMotionUsageDescription = Test;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -406,7 +467,7 @@
 		};
 		C5E590442B6379EE00328ED6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D68FA8042B73D5DD0052B7FF /* ALVRClient.xcconfig */;
+			baseConfigurationReference = EDFD5959094ECF215D1D8DBF /* Pods-ALVRClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -423,6 +484,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "I NEED THIS, LOL FOR TRACKING";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "For connecting to ALVR server on local network.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Used for in game voice chat";
+				INFOPLIST_KEY_NSMotionUsageDescription = Test;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

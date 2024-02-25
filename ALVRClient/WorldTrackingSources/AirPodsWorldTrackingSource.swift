@@ -1,14 +1,14 @@
 //
-//  MotionWorldTrackingSource.swift
+//  AirPodsWorldTrackingSource.swift
 //  ALVRClient
 //
-//  Created by Viktor Varenik on 23.02.2024.
+//  Created by Viktor Varenik on 25.02.2024.
 //
 
 import CoreMotion
 
-// FIXME: Not working yet!
-class MotionWorldTrackingSource: NSObject, WorldTrackingSource {
+// FIXME: Flipped two axis
+class AirPodsWorldTrackingSource: NSObject, WorldTrackingSource {
     // private let dispatchQueue: DispatchQueue
     private let operationQueue: OperationQueue
     private let motionManager: CMHeadphoneMotionManager

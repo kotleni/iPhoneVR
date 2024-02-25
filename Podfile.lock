@@ -1,0 +1,16 @@
+PODS:
+  - "Protobuf-C++ (3.18.0)"
+
+DEPENDENCIES:
+  - "Protobuf-C++ (= 3.18.0)"
+
+SPEC REPOS:
+  trunk:
+    - "Protobuf-C++"
+
+SPEC CHECKSUMS:
+  "Protobuf-C++": 62cfbc1427251f25bd2033da1a4165e5a21d57c0
+
+PODFILE CHECKSUM: 6112d2d61ed14244148c6fef8e88e52c13118ae9
+
+COCOAPODS: 1.15.2
