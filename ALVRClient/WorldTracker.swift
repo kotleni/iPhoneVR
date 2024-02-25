@@ -12,7 +12,6 @@ final class WorldTracker {
     enum WorldTrackingMode {
         case arSession
         case easyArSession
-        case coreMotion
     }
     
     private let worldTrackingSource: WorldTrackingSource
@@ -25,8 +24,6 @@ final class WorldTracker {
             worldTrackingSource = ARWorldTrackingSource()
         } else if trackingMode == .easyArSession {
             worldTrackingSource = EasyARWorldTrackingSource()
-        } else if trackingMode == .coreMotion {
-            worldTrackingSource = MotionWorldTrackingSource()
         } else {
             fatalError("Do you miss processing new tracking mode?")
         }
