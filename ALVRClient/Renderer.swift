@@ -358,11 +358,6 @@ final class Renderer {
         // Attach eye index to shader
         uniforms[0].eyeIndex = ushort(eyeIndex)
         
-        renderEncoder.label = "Primary Render Encoder \(eyeIndex)"
-        renderEncoder.pushDebugGroup("Draw Box \(eyeIndex)")
-        renderEncoder.setCullMode(.back)
-        renderEncoder.setFrontFacing(.counterClockwise)
-        
         renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
         renderEncoder.setRenderPipelineState(videoFramePipelineState)
         
@@ -375,7 +370,8 @@ final class Renderer {
         renderEncoder.setViewport(viewports[eyeIndex])
         
         // Cut another viewport
-//        renderEncoder.setScissorRect(.init(x: Int(viewports[eyeIndex == 0 ? 0 : 1].originX), y: Int(viewports[eyeIndex].originY), width: Int(viewports[eyeIndex].width), height: Int(viewports[eyeIndex].height)))
+//        let vp = viewports[eyeIndex == 0 ? 1 : 0]
+//        renderEncoder.setScissorRect(.init(x: Int(vp.originX), y: Int(vp.originY), width: Int(vp.width), height: Int(vp.height)))
         
         let pixelBuffer = queuedFrame.imageBuffer
         
@@ -407,34 +403,37 @@ final class Renderer {
         renderEncoder.setVertexBuffer(fullscreenQuadBuffer, offset: 0, index: VertexAttribute.position.rawValue)
         renderEncoder.setVertexBuffer(fullscreenQuadBuffer, offset: (3*4)*4, index: VertexAttribute.texcoord.rawValue)
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
-        
-        renderEncoder.popDebugGroup()
-        renderEncoder.endEncoding()
     }
     
     func renderStreamingFrame(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, drawable: CAMetalDrawable, queuedFrame: QueuedFrame) {
+        
+        renderPassDescriptor.colorAttachments[0].clearColor = .init(red: 0, green: 0, blue: 0, alpha: 0)
+        renderPassDescriptor.colorAttachments[0].loadAction = .load
         
         self.updateDynamicBufferState()
         // TODO: framePreviouslyPredictedPose
         self.updateGameStateForVideoFrame(framePose: matrix_identity_float4x4)
         
-        // TODO: Optimize me, maybe we can put index value by another way?
-        // TODO: And after do only one present/commit
         // Draw each eyes
         for i in 0...1 {
             guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
                 fatalError("Failed to create render encoder")
             }
             
-            // Draw each eyes
+            renderEncoder.label = "Primary Render Encoder"
+            renderEncoder.pushDebugGroup("Draw Box")
+            renderEncoder.setCullMode(.back)
+            renderEncoder.setFrontFacing(.counterClockwise)
+            
             renderStreamingFrameEye(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, drawable: drawable, queuedFrame: queuedFrame, renderEncoder: renderEncoder, eyeIndex: i)
             
-            // Finish
+            renderEncoder.popDebugGroup()
+            renderEncoder.endEncoding()
             
+            commandBuffer.present(drawable)
+            commandBuffer.commit()
+            commandBuffer.waitUntilCompleted()
         }
-        
-        commandBuffer.present(drawable)
-        commandBuffer.commit()
     }
     
     /// Build a render state pipeline object

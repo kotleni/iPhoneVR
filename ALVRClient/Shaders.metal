@@ -100,6 +100,7 @@ float2 decompressAxisAlignedCoord(float2 uv) {
 // VERTEX_SHADER
 
 vertex ColorInOut videoFrameVertexShader(Vertex in [[stage_in]],
+                                         uint instance_id [[instance_id]],
                                constant UniformsArray & uniformsArray [[ buffer(BufferIndexUniforms) ]]
                                          )
 {
