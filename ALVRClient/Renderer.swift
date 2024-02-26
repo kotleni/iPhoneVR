@@ -270,7 +270,7 @@ final class Renderer {
         
         let pixelBuffer = queuedFrame.imageBuffer
         
-        for i in 0...2 {
+        for i in 0...1 {
             var textureOut: CVMetalTexture! = nil
             var err: OSStatus = 0
             let width = CVPixelBufferGetWidth(pixelBuffer)
