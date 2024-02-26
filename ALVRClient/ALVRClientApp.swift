@@ -62,7 +62,7 @@ struct MetalView: UIViewRepresentable {
                 nil, nil,
                 oneViewWidth, height,
                 refreshRates, Int32(refreshRates.count),
-                /* support foveated encoding */ false,
+                /* support foveated encoding */ true,
                 /* external decoding */ true
             )
             alvr_resume()
@@ -139,7 +139,8 @@ struct MetalView: UIViewRepresentable {
                     hudMessageBuffer.deallocate()
                 case ALVR_EVENT_STREAMING_STARTED.rawValue:
                     print("streaming started: \(alvrEvent.STREAMING_STARTED)")
-                    renderer.updateStreamingState(isStarted: true)
+                    let foveationVars = FFR.calculateFoveationVars(alvrEvent.STREAMING_STARTED)
+                    renderer.updateStreamingState(isStarted: true, foveationVars: foveationVars)
                     
                     alvr_request_idr()
                     alvrInitialized = true
@@ -147,7 +148,7 @@ struct MetalView: UIViewRepresentable {
                 case ALVR_EVENT_STREAMING_STOPPED.rawValue:
                     print("streaming stopped")
                     alvrInitialized = false
-                    renderer.updateStreamingState(isStarted: false)
+                    renderer.updateStreamingState(isStarted: false, foveationVars: nil)
                 case ALVR_EVENT_HAPTICS.rawValue:
                     print("haptics: \(alvrEvent.HAPTICS)")
                 case ALVR_EVENT_DECODER_CONFIG.rawValue:
