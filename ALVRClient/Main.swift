@@ -9,11 +9,16 @@ import SwiftUI
 
 @main
 struct Main: App {
+    @State private var isLobbyPresented: Bool = true
+    
     var body: some Scene {
         WindowGroup {
             MetalView()
+                .fullScreenCover(isPresented: $isLobbyPresented, content: {
+                    LobbyView(isPresentedLobby: $isLobbyPresented)
+                        .background(.windowBackground)
+                })
                 .ignoresSafeArea()
         }
     }
-  
 }

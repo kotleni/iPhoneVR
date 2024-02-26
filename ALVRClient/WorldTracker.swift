@@ -9,9 +9,9 @@ import ARKit
 import CoreMotion
 
 final class WorldTracker {
-    enum WorldTrackingMode {
-        case arSession
-        case easyArSession
+    enum WorldTrackingMode: String, CaseIterable {
+        case arSession = "AR Orientation + Position"
+        case easyArSession = "AR Orientation Only"
     }
     
     private let worldTrackingSource: WorldTrackingSource
