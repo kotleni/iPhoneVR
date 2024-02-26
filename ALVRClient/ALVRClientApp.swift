@@ -44,6 +44,8 @@ struct MetalView: UIViewRepresentable {
             renderer = Renderer(metalDevice: metalDevice)
             
             super.init()
+            
+            EventHandler.shared.delegate = self
         }
         
         func updateStreamingState(isStarted: Bool) {
