@@ -1,16 +1,16 @@
-## ALVR for iOS
+## ALVR for iOS (very unstable)
 Custom ALVR client implementation for iOS.
 
 ### Whats implemented?
 - [x] Basic streaming
+- [ ] Lobby with settings
 - [ ] Cardboard support
+    - [ ] Distorsion
+    - [ ] QR code configuration
 - [x] Battery state update
-- [x] AR Tracking (high CPU/Power usage)
-     - [x] Orientation
-     - [x] Position
-- [ ] Motion tracking (low CPU/Power usage)
-    - [ ] Orientation
-    - [ ] ~~Position~~ *1
+- [x] World Tracking
+     - [x] AR Motion
+     - [x] AR Orientation
 - [ ] Render enchantments
     - [ ] Foveating encoding
     - [ ] Reprojection
