@@ -183,8 +183,9 @@ final class Renderer {
             
             renderStreamingFrame(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, drawable: drawable, queuedFrame: queuedFrame!)
             
-            commandBuffer.present(drawable)
-            commandBuffer.commit()
+//            commandBuffer.present(drawable)
+//            commandBuffer.commit()
+            
         }
     }
     
@@ -332,9 +333,12 @@ final class Renderer {
             let simdDeviceAnchor = matrix_identity_float4x4
             
             func uniforms(forViewIndex viewIndex: Int) -> Uniforms {
-                //let view = drawable.views[viewIndex]
-                let tangents: simd_float4 = simd_float4(1, 1, 1, 1)
+                let tangentsForViews: [simd_float4] = [
+                    simd_float4(3, 3, 3, 3),
+                    simd_float4(6, 6, 6, 6)
+                ]
                 
+                let tangents = tangentsForViews[viewIndex]
                 let viewMatrix = (framePose.inverse * simdDeviceAnchor).inverse
                 let projection = ProjectiveTransform3D(leftTangent: Double(tangents[0]),
                                                        rightTangent: Double(tangents[1]),
@@ -349,30 +353,34 @@ final class Renderer {
             self.uniforms[0].uniforms.0 = uniforms(forViewIndex: 0)
             self.uniforms[0].uniforms.1 = uniforms(forViewIndex: 1)
         }
-
     
-    func renderStreamingFrame(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, drawable: CAMetalDrawable, queuedFrame: QueuedFrame) {
-        guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
-            fatalError("Failed to create render encoder")
-        }
+    func renderStreamingFrameEye(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, drawable: CAMetalDrawable, queuedFrame: QueuedFrame, renderEncoder: MTLRenderCommandEncoder, eyeIndex: Int) {
+        // Attach eye index to shader
+        uniforms[0].eyeIndex = ushort(eyeIndex)
         
-        self.updateDynamicBufferState()
-        // TODO: framePreviouslyPredictedPose
-        self.updateGameStateForVideoFrame(framePose: matrix_identity_float4x4)
-        
-        renderEncoder.label = "Primary Render Encoder"
-        renderEncoder.pushDebugGroup("Draw Box")
+        renderEncoder.label = "Primary Render Encoder \(eyeIndex)"
+        renderEncoder.pushDebugGroup("Draw Box \(eyeIndex)")
         renderEncoder.setCullMode(.back)
         renderEncoder.setFrontFacing(.counterClockwise)
-        renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset :uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
+        
+        renderEncoder.setVertexBuffer(dynamicUniformBuffer, offset: uniformBufferOffset, index: BufferIndex.uniforms.rawValue)
         renderEncoder.setRenderPipelineState(videoFramePipelineState)
         
-        let viewports: [MTLViewport] = [.init(originX: 0, originY: 0, width: 515, height: 515, znear: 0.01, zfar: 100.0)]
-        renderEncoder.setViewports(viewports)
+        let width: Double = Double(drawable.texture.width / 2)
+        let height: Double = Double(drawable.texture.height)
+        let viewports: [MTLViewport] = [
+            .init(originX: 0, originY: 0, width: width, height: height, znear: 0.01, zfar: 100.0),
+            .init(originX: width , originY: 0, width: width, height: height, znear: 0.01, zfar: 100.0)
+        ]
+        renderEncoder.setViewport(viewports[eyeIndex])
+        
+        // Cut another viewport
+//        renderEncoder.setScissorRect(.init(x: Int(viewports[eyeIndex == 0 ? 0 : 1].originX), y: Int(viewports[eyeIndex].originY), width: Int(viewports[eyeIndex].width), height: Int(viewports[eyeIndex].height)))
         
         let pixelBuffer = queuedFrame.imageBuffer
         
-        for i in 0...2 {
+        // TODO: optimization, prepare textures one time for each eyes
+        for i in 0...1 {
             var textureOut: CVMetalTexture! = nil
             var err: OSStatus = 0
             let width = CVPixelBufferGetWidth(pixelBuffer)
@@ -398,10 +406,35 @@ final class Renderer {
         
         renderEncoder.setVertexBuffer(fullscreenQuadBuffer, offset: 0, index: VertexAttribute.position.rawValue)
         renderEncoder.setVertexBuffer(fullscreenQuadBuffer, offset: (3*4)*4, index: VertexAttribute.texcoord.rawValue)
-                
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
+        
         renderEncoder.popDebugGroup()
         renderEncoder.endEncoding()
+    }
+    
+    func renderStreamingFrame(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, drawable: CAMetalDrawable, queuedFrame: QueuedFrame) {
+        
+        self.updateDynamicBufferState()
+        // TODO: framePreviouslyPredictedPose
+        self.updateGameStateForVideoFrame(framePose: matrix_identity_float4x4)
+        
+        // TODO: Optimize me, maybe we can put index value by another way?
+        // TODO: And after do only one present/commit
+        // Draw each eyes
+        for i in 0...1 {
+            guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+                fatalError("Failed to create render encoder")
+            }
+            
+            // Draw each eyes
+            renderStreamingFrameEye(renderPassDescriptor: renderPassDescriptor, commandBuffer: commandBuffer, drawable: drawable, queuedFrame: queuedFrame, renderEncoder: renderEncoder, eyeIndex: i)
+            
+            // Finish
+            
+        }
+        
+        commandBuffer.present(drawable)
+        commandBuffer.commit()
     }
     
     /// Build a render state pipeline object
@@ -420,8 +453,6 @@ final class Renderer {
         pipelineDescriptor.vertexDescriptor = mtlVertexDescriptor
         pipelineDescriptor.colorAttachments[0].pixelFormat = globalPixelFormat
         pipelineDescriptor.depthAttachmentPixelFormat = .invalid
-            
-        // pipelineDescriptor.maxVertexAmplificationCount = layerRenderer.properties.viewCount
         
         return try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
     }

@@ -53,6 +53,11 @@ struct FFR {
         let targetEyeWidth = Float(body.view_width)
         let targetEyeHeight = Float(body.view_height)
         
+        // FIXME: bug
+        if body.view_height == 0 {
+            fatalError("OMG! View width/height can't be zero!")
+        }
+        
         let centerSizeX = data.foveation_center_size_x
         let centerSizeY = data.foveation_center_size_y
         let centerShiftX = data.foveation_center_shift_x

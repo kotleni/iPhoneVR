@@ -46,6 +46,7 @@ typedef struct
 typedef struct
 {
     Uniforms uniforms[2];
+    ushort eyeIndex;
 } UniformsArray;
 
 #endif /* ShaderTypes_h */
