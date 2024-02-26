@@ -57,6 +57,7 @@ struct LobbyView: View {
                     isPresentedLobby.update()
                     
                     viewModel.saveSettings()
+                    EventHandler.shared.setWorldTrackingMode(mode: viewModel.selectedTrackingMode)
                     EventHandler.shared.start()
                 }
             }
