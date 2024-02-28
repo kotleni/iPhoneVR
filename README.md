@@ -3,7 +3,7 @@ Custom ALVR client implementation for iOS.
 
 ### Whats implemented?
 - [x] Basic streaming
-- [ ] Lobby with settings
+- [x] Lobby with settings
 - [ ] Cardboard support
     - [ ] Distorsion
     - [ ] QR code configuration
@@ -17,9 +17,6 @@ Custom ALVR client implementation for iOS.
 
 ### Building
 See the [Building](https://github.com/alvr-org/alvr-visionos/wiki/Building) wiki page from alvr-visionos repo.
-
-### Explanations
-1. Motion sensors can't normal track position
 
 ### Screenshots
 *VRChat in action using this client*<br>
