@@ -27,6 +27,7 @@ class EventHandler: ObservableObject {
     
     var delegate: EventHandlerDelegate? = nil
     
+    /// Initialize alvr client but don't allow connecting
     func initialize(size: CGSize) {
         let refreshRates: [Float] = [60]
         let width = UInt32(size.width)
@@ -43,6 +44,7 @@ class EventHandler: ObservableObject {
         print("ALVR initialized.")
     }
     
+    /// Allow connection and request frames
     func start() {
         alvr_resume()
         alvr_request_idr()
@@ -55,8 +57,9 @@ class EventHandler: ObservableObject {
         worldTracker?.start()
     }
     
-    // FIXME: Ipd and fov is invalid maybe
+    /// Prepare and send views configs
     private func sendFovConfigs() {
+        // TODO: need cardboard support to get real values
         if alvrInitialized {
             print("Send view config")
             let v: Float = 1.0
@@ -71,7 +74,7 @@ class EventHandler: ObservableObject {
         }
     }
     
-    func parseMessage(_ message: String) {
+    private func parseMessage(_ message: String) {
         let lines = message.components(separatedBy: "\n")
         for line in lines {
             let keyValuePair = line.split(separator: ":")
@@ -87,19 +90,19 @@ class EventHandler: ObservableObject {
         }
     }
     
-    func updateHostname(_ newHostname: String) {
+    private func updateHostname(_ newHostname: String) {
         DispatchQueue.main.async {
             self.hostname = newHostname
         }
     }
 
-    func updateIp(_ newIp: String) {
+    private func updateIp(_ newIp: String) {
         DispatchQueue.main.async {
             self.ipAddr = newIp
         }
     }
     
-    func updateConnectionState(_ newState: ConnectionState) {
+    private func updateConnectionState(_ newState: ConnectionState) {
         DispatchQueue.main.async {
             self.connectionState = newState
         }
