@@ -57,6 +57,9 @@ struct LobbyView: View {
                     EventHandler.shared.setWorldTrackingParams(isTrackOrientation: !viewModel.isDontTrackOrientation, isTrackPosition: !viewModel.isDontTrackPosition)
                     EventHandler.shared.start()
                 }
+                
+                Text("After pressing the start button, the device should lie on the table in a horizontal position.")
+                    .fontWeight(.light)
             }
             
             Section("Server") {
