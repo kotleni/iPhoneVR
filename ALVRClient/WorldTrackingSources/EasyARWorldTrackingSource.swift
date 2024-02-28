@@ -17,7 +17,7 @@ class EasyARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSourc
     private var tps = 0
     
     // FIXME: Monkey code
-    private var position: (Float, Float, Float) = (Float.zero, Float.zero, Float.zero)
+    private var position: (Float, Float, Float) = (Float.zero, Float.zero + 1.6, Float.zero)
     private var rotation: CMQuaternion = .init()
     
     override init() {

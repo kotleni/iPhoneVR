@@ -52,7 +52,11 @@ class ARWorldTrackingSource: NSObject, ARSessionDelegate, WorldTrackingSource {
             let y = (cr * sp * cy + sr * cp * sy)
             let z = (cr * cp * sy - sr * sp * cy)
             
-            rotation = .init(x: Double(x), y: Double(y), z: Double(z), w: Double(w))
+            self.rotation = .init(x: Double(x), y: Double(y), z: Double(z), w: Double(w))
+        }
+        
+        if let pos = arSession.currentFrame?.camera.transform.columns.3 {
+            self.position = (pos.x, pos.y + 1.0, pos.z)
         }
         
         tps += 1
