@@ -48,8 +48,11 @@ class EventHandler: ObservableObject {
         alvr_request_idr()
     }
     
-    func setWorldTrackingMode(mode: WorldTracker.WorldTrackingMode) {
-        worldTracker = .init(trackingMode: mode)
+    /// Recreate world tracking with new params
+    func setWorldTrackingParams(isTrackOrientation: Bool, isTrackPosition: Bool) {
+        worldTracker?.stop()
+        worldTracker = .init(isTrackOrientation: isTrackOrientation, isTrackPosition: isTrackPosition)
+        worldTracker?.start()
     }
     
     // FIXME: Ipd and fov is invalid maybe

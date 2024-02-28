@@ -12,18 +12,17 @@ class LobbyViewModel: ObservableObject {
     @Published var hostName: String = ""
     @Published var ipAddr: String = ""
     
-    @Published var selectedTrackingMode: WorldTracker.WorldTrackingMode = .easyArSession
+    @Published var isDontTrackOrientation: Bool = true
+    @Published var isDontTrackPosition: Bool = true
     
     func loadSettings() {
-        WorldTracker.WorldTrackingMode.allCases.forEach { mode in
-            if mode.rawValue == UserDefaults.standard.string(forKey: "selectedTrackingMode") {
-                selectedTrackingMode = mode
-            }
-        }
+        isDontTrackOrientation = UserDefaults.standard.bool(forKey: "isDontTrackOrientation")
+        isDontTrackPosition = UserDefaults.standard.bool(forKey: "isDontTrackPosition")
     }
     
     func saveSettings() {
-        UserDefaults.standard.setValue(selectedTrackingMode.rawValue, forKey: "selectedTrackingMode")
+        UserDefaults.standard.setValue(isDontTrackOrientation, forKey: "isDontTrackOrientation")
+        UserDefaults.standard.setValue(isDontTrackPosition, forKey: "isDontTrackPosition")
     }
 }
 
@@ -47,8 +46,6 @@ struct LobbyView: View {
     @ObservedObject private var viewModel = LobbyViewModel()
     @ObservedObject private var eventHandler = EventHandler.shared
     
-    private let trackindModes: [WorldTracker.WorldTrackingMode] = [.arSession, .easyArSession]
-    
     var body: some View {
         List {
             Section {
@@ -57,23 +54,19 @@ struct LobbyView: View {
                     isPresentedLobby.update()
                     
                     viewModel.saveSettings()
-                    EventHandler.shared.setWorldTrackingMode(mode: viewModel.selectedTrackingMode)
+                    EventHandler.shared.setWorldTrackingParams(isTrackOrientation: !viewModel.isDontTrackOrientation, isTrackPosition: !viewModel.isDontTrackPosition)
                     EventHandler.shared.start()
                 }
             }
             
             Section("Server") {
-                // ListItem(title: "Version", content: eventHandler.version)
                 ListItem(title: "IP", content: "\(eventHandler.ipAddr)")
                 ListItem(title: "Hostname", content: "\(eventHandler.hostname)")
             }
             
-            Section("Settings") {
-                Picker("World tracking mode", selection: $viewModel.selectedTrackingMode) {
-                    ForEach(trackindModes, id: \.self) { mode in
-                        Text("\(mode.rawValue)")
-                    }
-                }
+            Section("Tracking") {
+                Toggle("Orientation", isOn: !$viewModel.isDontTrackOrientation)
+                Toggle("Position", isOn: !$viewModel.isDontTrackPosition)
             }
         }
         .onAppear {
