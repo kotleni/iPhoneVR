@@ -50,6 +50,9 @@ struct LobbyView: View {
         List {
             Section {
                 Button("Start") {
+                    // Prevent locking screen
+                    UIApplication.shared.isIdleTimerDisabled = true
+                    
                     isPresentedLobby.wrappedValue = false
                     isPresentedLobby.update()
                     
