@@ -49,6 +49,10 @@ final class Renderer {
     var vtDecompressionSession: VTDecompressionSession? = nil
     var videoFormat: CMFormatDescription? = nil
     
+    var lastFps: Int = 0
+    var currentFps: Int = 0
+    var lastFpsUpdateTime: Int64 = 0
+    
     init(metalDevice: MTLDevice) {
         guard let metalCommandQueue = metalDevice.makeCommandQueue() else { fatalError("Can't create command queue.") }
         
@@ -168,6 +172,19 @@ final class Renderer {
         }
     }
     
+    func updateFrameStats() {
+        if Int64.getCurrentMillis() - lastFpsUpdateTime > 1000 {
+            lastFpsUpdateTime = Int64.getCurrentMillis()
+            
+            lastFps = currentFps
+            currentFps = 0
+            
+            print("FPS: \(lastFps)")
+        }
+        
+        currentFps += 1
+    }
+    
     func updateFrame() {
         while true {
             guard let (nal, timestamp) = VideoHandler.pollNal() else {
@@ -212,8 +229,10 @@ final class Renderer {
                     }
                     
                     self?.processFrame(imageBuffer: imageBuffer)
+                    self?.updateFrameStats()
                 }
             } else {
+                print("WARN: vtDecompressionSession is nil!")
                 // TODO(zhuowei): hax
                 // OR NOT? (kotleni)
                 alvr_report_frame_decoded(timestamp)
