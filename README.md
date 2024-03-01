@@ -1,5 +1,5 @@
 ## ALVR for iOS (very unstable)
-Custom ALVR client implementation for iOS.
+Custom ALVR client implementation for iOS. <a href="https://github.com/kotleni/iPhoneVR/wiki/Troubleshooting">Troubleshooting</a>
 
 ### Whats implemented?
 - [x] Basic streaming
