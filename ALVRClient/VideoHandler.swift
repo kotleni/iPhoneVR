@@ -10,14 +10,15 @@ let HEVC_NAL_TYPE_VPS = 32
 
 struct VideoHandler {
     static func pollNal() -> (Data, UInt64)? {
-        let nalLength = alvr_poll_nal(nil, nil)
+        let nalLength = alvr_poll_nal(nil, nil, nil)
         if nalLength == 0 {
             return nil
         }
         let nalBuffer = UnsafeMutableBufferPointer<CChar>.allocate(capacity: Int(nalLength))
         defer { nalBuffer.deallocate() }
         var nalTimestamp:UInt64 = 0
-        alvr_poll_nal(nalBuffer.baseAddress, &nalTimestamp)
+        var viewParams = AlvrViewParams()
+        alvr_poll_nal(&nalTimestamp, &viewParams, nalBuffer.baseAddress)
         return (Data(buffer: nalBuffer), nalTimestamp)
     }
     

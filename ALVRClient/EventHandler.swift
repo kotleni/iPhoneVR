@@ -33,13 +33,14 @@ class EventHandler: ObservableObject {
         let width = UInt32(size.width)
         let oneViewWidth = (width / 2)
         let height = UInt32(size.height)
-        alvr_initialize(
-            nil, nil,
-            oneViewWidth, height,
-            refreshRates, Int32(refreshRates.count),
-            /* support foveated encoding */ false,
-            /* external decoding */ true
-        )
+        var capabilities = AlvrClientCapabilities()
+        capabilities.default_view_width = oneViewWidth
+        capabilities.default_view_height = height
+        capabilities.refresh_rates = UnsafePointer(refreshRates)
+        capabilities.refresh_rates_count = Int32(refreshRates.count)
+        capabilities.external_decoder = true
+        capabilities.foveated_encoding = false
+        alvr_initialize(capabilities)
         
         print("ALVR initialized.")
     }
@@ -55,23 +56,6 @@ class EventHandler: ObservableObject {
         worldTracker?.stop()
         worldTracker = .init(isTrackOrientation: isTrackOrientation, isTrackPosition: isTrackPosition)
         worldTracker?.start()
-    }
-    
-    /// Prepare and send views configs
-    private func sendFovConfigs() {
-        // TODO: need cardboard support to get real values
-        if alvrInitialized {
-            print("Send view config")
-            let v: Float = 1.0
-            let v2: Float = 1.0
-            let leftAngles = atan(simd_float4(v, v, v, v))
-            let rightAngles = atan(simd_float4(v2, v2, v2, v2))
-            let leftFov = AlvrFov(left: -leftAngles.x, right: leftAngles.y, up: leftAngles.z, down: -leftAngles.w)
-            let rightFov = AlvrFov(left: -rightAngles.x, right: rightAngles.y, up: rightAngles.z, down: -rightAngles.w)
-            let fovs = [leftFov, rightFov]
-            let ipd = Float(0.063)
-            alvr_send_views_config(fovs, ipd)
-        }
     }
     
     private func parseMessage(_ message: String) {
@@ -132,7 +116,6 @@ class EventHandler: ObservableObject {
                 
                 alvr_request_idr()
                 alvrInitialized = true
-                sendFovConfigs()
             case ALVR_EVENT_STREAMING_STOPPED.rawValue:
                 updateConnectionState(.disconnected)
                 
@@ -156,7 +139,23 @@ class EventHandler: ObservableObject {
                         var trackingMotion = AlvrDeviceMotion(device_id: MetalView.Coordinator.deviceIdHead, pose: pose, linear_velocity: (0, 0, 0), angular_velocity: (0, 0, 0))
                         let timestamp = mach_absolute_time()
                         //print("sending tracking for timestamp \(timestamp)")
-                        alvr_send_tracking(timestamp, &trackingMotion, 1, nil, nil)
+                        
+                        let v: Float = 1.0
+                        let v2: Float = 1.0
+                        let leftAngles = atan(simd_float4(v, v, v, v))
+                        let rightAngles = atan(simd_float4(v2, v2, v2, v2))
+                        let leftFov = AlvrFov(left: -leftAngles.x, right: leftAngles.y, up: leftAngles.z, down: -leftAngles.w)
+                        let rightFov = AlvrFov(left: -rightAngles.x, right: rightAngles.y, up: rightAngles.z, down: -rightAngles.w)
+                        let leftPose = pose
+                        var rightPose = pose
+                        rightPose.position.0 += 0.063 // HAX: each eyes can't have same positions
+                        let viewFovsPtr = UnsafeMutablePointer<AlvrViewParams>.allocate(capacity: 2)
+                                viewFovsPtr[0] = AlvrViewParams(pose: leftPose, fov: rightFov)
+                                viewFovsPtr[1] = AlvrViewParams(pose: rightPose, fov: rightFov)
+//                        let ipd = Float(0.063)
+                        
+                        var viewParams = AlvrViewParams(pose: pose, fov: leftFov)
+                        alvr_send_tracking(timestamp, UnsafePointer(viewFovsPtr), &trackingMotion, 1, nil, nil)
                     }
                     
                     // Send battery state every 30 secs
