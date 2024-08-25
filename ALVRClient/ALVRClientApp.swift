@@ -42,7 +42,7 @@ struct MetalView: UIViewRepresentable {
             guard let metalDevice = MTLCreateSystemDefaultDevice() else { fatalError("Can't create metal device.") }
             
             renderer = Renderer(metalDevice: metalDevice)
-            
+            Renderer.shared = renderer;
             super.init()
             
             EventHandler.shared.delegate = self

@@ -19,7 +19,10 @@ final class Renderer {
     struct QueuedFrame {
         let imageBuffer: CVImageBuffer
         let timestamp: UInt64
+        let viewParams: [AlvrViewParams]
     }
+    
+    static var shared: Renderer? = nil
     
     private let metalDevice: MTLDevice
     private let metalCommandQueue: MTLCommandQueue
@@ -139,24 +142,189 @@ final class Renderer {
             framesRendered = 0
             framesSinceLastIDR = 0
             framesSinceLastDecode = 0
+            timeLastAlvrEvent = CACurrentMediaTime()
+            timeLastFrameSent = CACurrentMediaTime()
             
             lastIpd = -1
         }
     }
     
+    var timeLastSentPeriodicUpdatedValues: Double = 0.0
+        var timeLastSentMdnsBroadcast: Double = 0.0
+        var timeLastAlvrEvent: Double = 0.0
+        var timeLastFrameGot: Double = 0.0
+        var timeLastFrameSent: Double = 0.0
+        var timeLastFrameDecoded: Double = 0.0
+        var numberOfEventThreadRestarts: Int = 0
+    
+    var stutterSampleStart = 0.0
+        var stutterEventsCounted = 0
+        var lastStutterTime = 0.0
+        var awdlAlertPresented = false
+        var audioIsOff = false
+    
+    var renderStarted = false
+    
+    func setIsStarted(isStarted: Bool) {
+        self.renderStarted = isStarted
+    }
+    
+    // Poll for NALs and and, when decoded, add them to the frameQueue
+        func handleNals() {
+            timeLastFrameGot = CACurrentMediaTime()
+            
+            // Prevent NAL buildup
+            if !renderStarted {
+                VideoHandler.abandonAllPendingNals()
+                return
+            }
+            
+            while renderStarted {
+                guard let (timestamp, viewParams, nal) = VideoHandler.pollNal() else {
+                    break
+                }
+                
+                objc_sync_enter(frameQueueLock)
+                framesSinceLastIDR += 1
+
+                // If we're receiving NALs timestamped from >400ms ago, stop decoding them
+                // to prevent a cascade of needless decoding lag
+                let ns_diff_from_last_req_ts = lastRequestedTimestamp > timestamp ? lastRequestedTimestamp &- timestamp : 0
+                let lagSpiked = (ns_diff_from_last_req_ts > 1000*1000*600 && framesSinceLastIDR > 90*2)
+                
+                if CACurrentMediaTime() - stutterSampleStart >= 60.0 {
+                    print("Stuttter events in the last minute:", stutterEventsCounted)
+                    stutterSampleStart = CACurrentMediaTime()
+                    
+                    if stutterEventsCounted >= 50 {
+                        print("AWDL detected!")
+//                        if ALVRClientApp.gStore.settings.dontShowAWDLAlertAgain {
+//                            print("User doesn't want to see the alert.")
+//                        }
+//                        else {
+//                            DispatchQueue.main.async {
+//                                if self.awdlAlertPresented {
+//                                    return
+//                                }
+//                                self.awdlAlertPresented = true
+//                                
+//                                // Not super kosher but I don't see another way.
+//                                // ALVRClientApp.shared.openWindow(id: "AWDLAlert")
+//                            }
+//                        }
+                    }
+                    
+                    stutterEventsCounted = 0
+                }
+                if ns_diff_from_last_req_ts > 1000*1000*40 {
+                    if (CACurrentMediaTime() - lastStutterTime > 0.25 && CACurrentMediaTime() - lastStutterTime < 10.0) || ns_diff_from_last_req_ts > 1000*1000*100 {
+                        stutterEventsCounted += 1
+                        //print(ns_diff_from_last_req_ts, CACurrentMediaTime() - lastStutterTime)
+                    }
+                    lastStutterTime = CACurrentMediaTime()
+                }
+                // TODO: adjustable framerate
+                // TODO: maybe also call this if we fail to decode for too long.
+                if lastRequestedTimestamp != 0 && (lagSpiked || framesSinceLastDecode > 90*2) {
+                    objc_sync_exit(frameQueueLock)
+
+                    print("Handle spike!", framesSinceLastDecode, framesSinceLastIDR, ns_diff_from_last_req_ts)
+
+                    // We have to request an IDR to resume the video feed
+                    VideoHandler.abandonAllPendingNals()
+                    alvr_request_idr()
+                    framesSinceLastIDR = 0
+                    framesSinceLastDecode = 0
+
+                    continue
+                }
+                objc_sync_exit(frameQueueLock)
+                
+                let startedDecodeTime = CACurrentMediaTime()
+
+                if let vtDecompressionSession = vtDecompressionSession {
+                    VideoHandler.feedVideoIntoDecoder(decompressionSession: vtDecompressionSession, nals: nal, timestamp: timestamp, videoFormat: videoFormat!) { [self] imageBuffer in
+                        guard let imageBuffer = imageBuffer else {
+                            return
+                        }
+                        
+                        if (CACurrentMediaTime() - startedDecodeTime > Double(50*MSEC_PER_SEC)) {
+                            objc_sync_enter(frameQueueLock)
+
+                            print("Handle decode overrun!", CACurrentMediaTime() - startedDecodeTime, framesSinceLastDecode, framesSinceLastIDR, ns_diff_from_last_req_ts)
+
+                            // We have to request an IDR to resume the video feed
+                            VideoHandler.abandonAllPendingNals()
+                            alvr_request_idr()
+                            framesSinceLastIDR = 0
+                            framesSinceLastDecode = 0
+                            objc_sync_exit(frameQueueLock)
+
+                            return
+                        }
+                        
+                        //print(timestamp, (CACurrentMediaTime() - timeLastFrameDecoded) * 1000.0)
+                        timeLastFrameDecoded = CACurrentMediaTime()
+
+                        //let imageBufferPtr = Unmanaged.passUnretained(imageBuffer).toOpaque()
+                        //print("finish decode: \(timestamp), \(imageBufferPtr), \(nal_type)")
+
+                        objc_sync_enter(frameQueueLock)
+                        framesSinceLastDecode = 0
+                        if frameQueueLastTimestamp != timestamp || true
+                        {
+                            alvr_report_frame_decoded(timestamp)
+
+                            // TODO: For some reason, really low frame rates seem to decode the wrong image for a split second?
+                            // But for whatever reason this is fine at high FPS.
+                            // From what I've read online, the only way to know if an H264 frame has actually completed is if
+                            // the next frame is starting, so keep this around for now just in case.
+                            if frameQueueLastImageBuffer != nil {
+                                //frameQueue.append(QueuedFrame(imageBuffer: frameQueueLastImageBuffer!, timestamp: frameQueueLastTimestamp))
+                                frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp, viewParams: viewParams))
+                            }
+                            else {
+                                frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp, viewParams: viewParams))
+                            }
+                            if frameQueue.count > 3 {
+                                frameQueue.removeFirst()
+                            }
+
+
+                            frameQueueLastTimestamp = timestamp
+                            frameQueueLastImageBuffer = imageBuffer
+                            timeLastFrameSent = CACurrentMediaTime()
+                        }
+
+                        // Pull the very last imageBuffer for a given timestamp
+                        if frameQueueLastTimestamp == timestamp {
+                            frameQueueLastImageBuffer = imageBuffer
+                        }
+
+                        objc_sync_exit(frameQueueLock)
+                    }
+                } else {
+                    alvr_report_frame_decoded(timestamp)
+                    alvr_report_compositor_start(timestamp)
+                    alvr_report_submit(timestamp, 0)
+                }
+            }
+        }
+    
     func createDecoder() {
         // Don't reinstantiate the decoder if it's already created.
         // TODO: Switching from H264 -> HEVC at runtime?
         if vtDecompressionSession != nil {
-            return 
+            handleNals()
+            return
         }
         
         while true {
-            guard let (nal, timestamp) = VideoHandler.pollNal() else {
+            guard let (_, _, nal) = VideoHandler.pollNal() else {
                 fatalError("create decoder: failed to poll nal?!")
                 break
             }
-            print(nal.count, timestamp)
+            //print(nal.count, timestamp)
             NSLog("%@", nal as NSData)
             let val = (nal[4] & 0x7E) >> 1
             print("NAL type of \(val)")
@@ -186,96 +354,101 @@ final class Renderer {
     }
     
     func updateFrame() {
-        while true {
-            guard let (nal, timestamp) = VideoHandler.pollNal() else {
-                break
-            }
-            
-            framesSinceLastIDR += 1
-            
-            // Don't submit NALs for decoding if we have already decoded a later frame
-            objc_sync_enter(frameQueueLock)
-            if timestamp < frameQueueLastTimestamp {
-//                            print("Skip:", timestamp, frameQueueLastTimestamp)
-//                            objc_sync_exit(frameQueueLock)
-//                            break
-            }
-            
-            // If we're receiving NALs timestamped from >400ms ago, stop decoding them
-            // to prevent a cascade of needless decoding lag
-            let ns_diff_from_last_req_ts = lastRequestedTimestamp > timestamp ? lastRequestedTimestamp &- timestamp : 0
-            let lagSpiked = (ns_diff_from_last_req_ts > 1000*1000*600 && framesSinceLastIDR > 90*2)
-            // TODO: adjustable framerate
-            // TODO: maybe also call this if we fail to decode for too long.
-            if lastRequestedTimestamp != 0 && (lagSpiked || framesSinceLastDecode > 90*2) {
-                objc_sync_exit(frameQueueLock)
-                                    
-                print("Handle spike!", framesSinceLastDecode, framesSinceLastIDR, ns_diff_from_last_req_ts)
-                                    
-                // We have to request an IDR to resume the video feed
-                VideoHandler.abandonAllPendingNals()
-                alvr_request_idr()
-                framesSinceLastIDR = 0
-                framesSinceLastDecode = 0
-                                    
-                continue
-            }
-            objc_sync_exit(frameQueueLock)
-            
-            if let vtDecompressionSession = vtDecompressionSession {
-                VideoHandler.feedVideoIntoDecoder(decompressionSession: vtDecompressionSession, nals: nal, timestamp: timestamp, videoFormat: videoFormat!) { [weak self] imageBuffer in
-                    guard let imageBuffer = imageBuffer else {
-                        return
-                    }
-                    
-                    self?.processFrame(imageBuffer: imageBuffer)
-                    self?.updateFrameStats()
-                }
-            } else {
-                print("WARN: vtDecompressionSession is nil!")
-                // TODO(zhuowei): hax
-                // OR NOT? (kotleni)
-                alvr_report_frame_decoded(timestamp)
-                alvr_report_compositor_start(timestamp)
-                alvr_report_submit(timestamp, 0)
-            }
+        if !renderStarted {
+            renderStarted = true
         }
+        
+        handleNals()
+//        while true {
+//            guard let (nal, timestamp) = VideoHandler.pollNal() else {
+//                break
+//            }
+//            
+//            framesSinceLastIDR += 1
+//            
+//            // Don't submit NALs for decoding if we have already decoded a later frame
+//            objc_sync_enter(frameQueueLock)
+//            if timestamp < frameQueueLastTimestamp {
+//                //print("Skip:", timestamp, frameQueueLastTimestamp)
+//                //objc_sync_exit(frameQueueLock)
+//                //break
+//            }
+//            
+//            // If we're receiving NALs timestamped from >400ms ago, stop decoding them
+//            // to prevent a cascade of needless decoding lag
+//            let ns_diff_from_last_req_ts = lastRequestedTimestamp > timestamp ? lastRequestedTimestamp &- timestamp : 0
+//            let lagSpiked = (ns_diff_from_last_req_ts > 1000*1000*600 && framesSinceLastIDR > 90*2)
+//            // TODO: adjustable framerate
+//            // TODO: maybe also call this if we fail to decode for too long.
+//            if lastRequestedTimestamp != 0 && (lagSpiked || framesSinceLastDecode > 90*2) {
+//                objc_sync_exit(frameQueueLock)
+//                                    
+//                print("Handle spike!", framesSinceLastDecode, framesSinceLastIDR, ns_diff_from_last_req_ts)
+//                                    
+//                // We have to request an IDR to resume the video feed
+//                VideoHandler.abandonAllPendingNals()
+//                alvr_request_idr()
+//                framesSinceLastIDR = 0
+//                framesSinceLastDecode = 0
+//                                    
+//                continue
+//            }
+//            objc_sync_exit(frameQueueLock)
+//            
+//            if let vtDecompressionSession = vtDecompressionSession {
+//                VideoHandler.feedVideoIntoDecoder(decompressionSession: vtDecompressionSession, nals: nal, timestamp: timestamp, videoFormat: videoFormat!) { [weak self] imageBuffer in
+//                    guard let imageBuffer = imageBuffer else {
+//                        return
+//                    }
+//                    
+//                    self?.processFrame(imageBuffer: imageBuffer)
+//                    self?.updateFrameStats()
+//                }
+//            } else {
+//                print("WARN: vtDecompressionSession is nil!")
+//                // TODO(zhuowei): hax
+//                // OR NOT? (kotleni)
+//                alvr_report_frame_decoded(timestamp)
+//                alvr_report_compositor_start(timestamp)
+//                alvr_report_submit(timestamp, 0)
+//            }
+//        }
     }
     
     func processFrame(imageBuffer: CVImageBuffer) {
-        let timestamp = mach_absolute_time()
+        //let timestamp = mach_absolute_time()
         
-        objc_sync_enter(frameQueueLock)
-        framesSinceLastDecode = 0
-        if frameQueueLastTimestamp != timestamp
-        {
-            // TODO: For some reason, really low frame rates seem to decode the wrong image for a split second?
-            // But for whatever reason this is fine at high FPS.
-            // From what I've read online, the only way to know if an H264 frame has actually completed is if
-            // the next frame is starting, so keep this around for now just in case.
-            if frameQueueLastImageBuffer != nil {
-                frameQueue.append(QueuedFrame(imageBuffer: frameQueueLastImageBuffer!, timestamp: frameQueueLastTimestamp))
-                //frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp))
-            }
-            else {
-                frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp))
-            }
-            if frameQueue.count > 2 {
-                frameQueue.removeFirst()
-            }
-            
-            //print("queue: \(frameQueueLastTimestamp) -> \(timestamp), \(test)")
-            
-            frameQueueLastTimestamp = timestamp
-            frameQueueLastImageBuffer = imageBuffer
-        }
+//        objc_sync_enter(frameQueueLock)
+//        framesSinceLastDecode = 0
+//        if frameQueueLastTimestamp != timestamp
+//        {
+//            // TODO: For some reason, really low frame rates seem to decode the wrong image for a split second?
+//            // But for whatever reason this is fine at high FPS.
+//            // From what I've read online, the only way to know if an H264 frame has actually completed is if
+//            // the next frame is starting, so keep this around for now just in case.
+//            if frameQueueLastImageBuffer != nil {
+//                frameQueue.append(QueuedFrame(imageBuffer: frameQueueLastImageBuffer!, timestamp: frameQueueLastTimestamp))
+//                //frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp))
+//            }
+//            else {
+//                frameQueue.append(QueuedFrame(imageBuffer: imageBuffer, timestamp: timestamp))
+//            }
+//            if frameQueue.count > 2 {
+//                frameQueue.removeFirst()
+//            }
+//            
+//            //print("queue: \(frameQueueLastTimestamp) -> \(timestamp), \(test)")
+//            
+//            frameQueueLastTimestamp = timestamp
+//            frameQueueLastImageBuffer = imageBuffer
+//        }
         
         // Pull the very last imageBuffer for a given timestamp
-        if frameQueueLastTimestamp == timestamp {
-             frameQueueLastImageBuffer = imageBuffer
-        }
-        
-        objc_sync_exit(frameQueueLock)
+//        if frameQueueLastTimestamp == timestamp {
+//             frameQueueLastImageBuffer = imageBuffer
+//        }
+//        
+//        objc_sync_exit(frameQueueLock)
     }
     
     func renderStreamingFrame(renderPassDescriptor: MTLRenderPassDescriptor, commandBuffer: MTLCommandBuffer, drawable: CAMetalDrawable, queuedFrame: QueuedFrame) {

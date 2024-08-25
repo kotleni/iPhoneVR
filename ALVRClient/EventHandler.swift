@@ -21,6 +21,7 @@ class EventHandler: ObservableObject {
     @Published var ipAddr: String = ""
     
     var alvrInitialized = false
+    var streamingActive = false
     private var lastBatteryStateUpdateTime: Int64 = 0
     private var worldTracker: WorldTracker? = nil
     private var alvrEvent: AlvrEvent = AlvrEvent()
@@ -40,6 +41,9 @@ class EventHandler: ObservableObject {
         capabilities.refresh_rates_count = Int32(refreshRates.count)
         capabilities.external_decoder = true
         capabilities.foveated_encoding = false
+        capabilities.encoder_high_profile = true
+        capabilities.encoder_10_bits = true
+        capabilities.encoder_av1 = false
         alvr_initialize(capabilities)
         
         print("ALVR initialized.")
@@ -113,18 +117,22 @@ class EventHandler: ObservableObject {
                 
                 print("streaming started: \(alvrEvent.STREAMING_STARTED)")
                 delegate?.updateStreamingState(isStarted: true)
-                
-                alvr_request_idr()
+                if !streamingActive {
+                    streamingActive = true
+                    alvr_request_idr()
+                }
                 alvrInitialized = true
             case ALVR_EVENT_STREAMING_STOPPED.rawValue:
                 updateConnectionState(.disconnected)
                 
                 print("streaming stopped")
                 alvrInitialized = false
+                streamingActive = false
                 delegate?.updateStreamingState(isStarted: false)
             case ALVR_EVENT_HAPTICS.rawValue:
                 print("haptics: \(alvrEvent.HAPTICS)")
             case ALVR_EVENT_DECODER_CONFIG.rawValue:
+                streamingActive = true
                 print("create decoder: \(alvrEvent.DECODER_CONFIG)")
                 delegate?.createDecoder()
             case ALVR_EVENT_FRAME_READY.rawValue:
